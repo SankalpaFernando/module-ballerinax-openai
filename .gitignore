@@ -53,3 +53,9 @@ build
 
 # Ignore Docker env file
 docker.env
+
+
+#Ignore temp yaml files
+.temp.yaml
+
+.env
