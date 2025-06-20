@@ -196,6 +196,99 @@ function testgetThreadById() returns error? {
 
 }
 
+@test:Config {
+    groups: ["live_tests", "mock_tests", "audio"]
+}
+function testpostAudioSpeech() returns error?{
+    CreateSpeechRequest request = {
+        input: "Hello, how are you?",
+        instructions: "You're a good assistant",
+        responseFormat:"mp3",
+        speed:1,
+        model:"tts-1",
+        voice: "anna"
+    };
+    
+    byte[]|error response = check openai->/audio/speech.post(request, headers = headers);
+
+    if response is byte[] {
+        int responseLength = response.length();
+        test:assertNotEquals(responseLength, 0, msg = "Expected response length not to be empty");
+    }
+}
+
+@test:Config {
+    groups: ["live_tests", "mock_tests", "chat"]
+}
+function testpostChatCompletions() returns error? {
+    CreateChatCompletionRequest request = {
+        model: "gpt-4o",
+        messages: [
+            {
+                role: "user",
+                content: "Hello, how can you assist me today?"
+            }
+        ],
+        temperature: 1.0,
+        topP: 1.0,
+        user: "user-1234",
+        serviceTier: "auto"
+    };
+
+    CreateChatCompletionResponse response = check openai->/chat/completions.post(request);
+
+    test:assertNotEquals(response.id, "", "Expected completion ID to be generated");
+    test:assertEquals(response.model, "gpt-4o", "Expected model to be 'gpt-4o'");
+    test:assertEquals(response.choices.length(), 1, "Expected one choice in response");
+    test:assertEquals(response.choices[0].message.role, "assistant", "Expected response role to be 'assistant'");
+    test:assertNotEquals(response.choices[0].message.content, "", "Expected non-empty response content");
+    test:assertNotEquals(response.created, 0, "Expected creation timestamp to be set");
+}
+
+@test:Config {
+    groups: ["live_tests", "mock_tests", "chat"]
+}
+function testpostCompletions() returns error?{
+
+    string model = "davinci";
+    CreateCompletionRequest request = {
+        model,
+        prompt: "Write a short story about a cat and a mouse",
+        maxTokens: 256,
+        temperature: 0.5,
+        topP: 0.5,
+        user: "user-1234"
+    };
+
+    CreateCompletionResponse response = check openai->/completions.post(request,headers=headers);
+
+    test:assertEquals(response.model,model,"Expected model to be " + model);
+    test:assertEquals(response.choices.length(),1,"Expected one choice in response");
+    test:assertNotEquals(response.choices[0].text,"","Expected non-empty response content");
+    test:assertNotEquals(response.usage,"","Expected usage to be set");
+    test:assertNotEquals(response.created,0,"Expected creation timestamp to be set");
+}
+
+@test:Config{
+    groups: ["live_tests", "mock_tests", "embeddings"]
+}
+function testpostembeddings() returns error?{
+    string model = "text-embedding-3-small";
+    CreateEmbeddingRequest request = {
+        input: "The quick brown fox jumped over the lazy dog",
+        model,
+        encodingFormat: "float",
+        dimensions: 1,
+        user: "user-1234"
+    };
+
+    CreateEmbeddingResponse response = check openai->/embeddings.post(request,headers=headers);
+
+    test:assertEquals(response.model,model,"Expected model to be "+model);
+    test:assertNotEquals(response.usage,"","Expected usage to be set");
+    test:assertNotEquals(response.data.length(),0,"Expected data to be set");
+}
+
 function testdeleteAssistant() returns error? {
     DeleteAssistantResponse|error response = openai->/assistants/[assistantId].delete(headers = headers);
 
@@ -218,6 +311,7 @@ function testdeleteThread() returns error? {
     test:assertEquals(response.deleted, true, "Expected thread to be deleted successfully");
     test:assertEquals(response.id, threadId, "Expected deleted thread ID to match");
 }
+
 
 @test:AfterSuite {}
 function deleteResources() returns error? {

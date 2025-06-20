@@ -343,6 +343,176 @@ resource function post threads/runs(http:Caller caller, http:Request req) return
     check caller->respond(responseData);
 }
 
+resource function post audio/speech(http:Caller caller, http:Request req) returns error? {
+    string|http:HeaderNotFoundError betaHeader = req.getHeader("OpenAI-Beta");
+    if betaHeader is http:HeaderNotFoundError || betaHeader != "assistants=v2" {
+        http:Response errorResponse = new;
+        errorResponse.statusCode = 400;
+        errorResponse.setJsonPayload({"error": "Missing or invalid OpenAI-Beta header"});
+        check caller->respond(errorResponse);
+        return;
+    }
+    json|error requestBody = req.getJsonPayload();
+
+    if requestBody is error {
+        http:Response errorResponse = new;
+        errorResponse.statusCode = 400;
+        errorResponse.setJsonPayload({"error": "Invalid JSON payload"});
+        check caller->respond(errorResponse);
+        return;
+    }
+
+    byte[] mockAudioData = "mock_mp3_data".toBytes();
+    http:Response response = new;
+    response.setHeader("Transfer-Encoding", "chunked");
+    response.setHeader("Content-Type", "application/octet-stream");
+    response.setBinaryPayload(mockAudioData);
+    check caller->respond(response);
+}
+
+resource function post chat/completions(http:Caller caller, http:Request req) returns error? {
+        json|error requestBody = req.getJsonPayload();
+        if requestBody is error {
+            http:Response errorResponse = new;
+            errorResponse.statusCode = 400;
+            errorResponse.setJsonPayload({"error": "Invalid JSON payload"});
+            check caller->respond(errorResponse);
+            return;
+        }
+        string model = check requestBody.model.ensureType(string);
+        json[] messages = check requestBody.messages.ensureType();
+        string completionId = "chatcmpl_" + time:utcNow()[0].toString();
+        string userContent = "";
+        foreach json msg in messages {
+            if check msg.role == "user" {
+                userContent = check msg.content.ensureType(string);
+                break;
+            }
+        }
+        json responseData = {
+            "id": completionId,
+            "object": "chat.completion",
+            "created": getCurrentTimestamp(),
+            "model": model,
+            "choices": [
+                {
+                    "index": 0,
+                    "message": {
+                        "role": "assistant",
+                        "content": "Assistant response: " + userContent
+                    },
+                    "finish_reason": "stop"
+                }
+            ],
+            "usage": {
+                "prompt_tokens": 10,
+                "completion_tokens": 10,
+                "total_tokens": 20
+            }
+        };
+        check caller->respond(responseData);
+}
+
+resource function post completions(http:Caller caller, http:Request req) returns error?{
+    string|http:HeaderNotFoundError betaHeader = req.getHeader("OpenAI-Beta");
+    if betaHeader is http:HeaderNotFoundError || betaHeader != "assistants=v2" {
+        http:Response errorResponse = new;
+        errorResponse.statusCode = 400;
+        errorResponse.setJsonPayload({"error": "Missing or invalid OpenAI-Beta header"});
+        check caller->respond(errorResponse);
+        return;
+    }
+
+    json|error requestBody = req.getJsonPayload();
+
+    if requestBody is error {
+        http:Response errorResponse = new;
+        errorResponse.statusCode = 400;
+        errorResponse.setJsonPayload({"error": "Invalid JSON payload"});
+        check caller->respond(errorResponse);
+        return;
+    }
+
+
+    string model = check requestBody.model.ensureType(string);
+
+    json responseData = {
+        id: "1",
+        choices:[
+            {
+                finish_reason: "stop",
+                index: 0,
+                logprobs: {
+                    text_offset: [0],
+                    token_logprobs: [0],
+                    tokens: ["string"],
+                    top_logprobs: []
+                },
+                text: "string"
+            }
+        ],
+        created: time:monotonicNow(),
+        model: model,
+        system_fingerprint: "string",
+        usage: {
+            completion_tokens: 0,
+            prompt_tokens: 0,
+            total_tokens: 0,
+            completion_tokens_details: {
+            accepted_prediction_tokens: 0,
+            audio_tokens: 0,
+            reasoning_tokens: 0,
+            rejected_prediction_tokens: 0
+            },
+            prompt_tokens_details: {
+            audio_tokens: 0,
+            cached_tokens: 0
+            }
+        },
+        "object": "text_completion"
+
+    };
+
+    check caller->respond(responseData);
+}
+
+resource function post embeddings(http:Caller caller,http:Request req) returns  error?{
+    string|http:HeaderNotFoundError betaHeader = req.getHeader("OpenAI-Beta");
+    if betaHeader is http:HeaderNotFoundError || betaHeader != "assistants=v2" {
+        http:Response errorResponse = new;
+        errorResponse.statusCode = 400;
+        errorResponse.setJsonPayload({"error": "Missing or invalid OpenAI-Beta header"});
+        check caller->respond(errorResponse);
+        return;
+    }
+    json|error requestBody = req.getJsonPayload();
+    if requestBody is error {
+            http:Response errorResponse = new;
+            errorResponse.statusCode = 400;
+            errorResponse.setJsonPayload({"error": "Invalid JSON payload"});
+            check caller->respond(errorResponse);
+            return;
+    }
+    json responseData = {
+        data: [
+            {
+                index:0,
+                embedding: [
+                    0
+                ],
+                "object": "embedding"
+            }
+        ],
+        model:check requestBody.model,
+        "object": "list",
+        usage: {
+            prompt_tokens:0,
+            total_tokens:0
+        }
+    };
+
+    check caller->respond(responseData);
+}
 
 };
 
@@ -350,3 +520,5 @@ function init() returns error? {
     log:printInfo("Mock service started on port 9090");
     check httpListener.attach(mockService, "/");
 }
+
+
