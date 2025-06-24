@@ -276,7 +276,7 @@ function testpostCompletions() returns error?{
         user: "user-1234"
     };
 
-    CreateCompletionResponse response = check openai->/completions.post(request,headers=headers);
+    CreateCompletionResponse response = check openai->/completions.post(request);
 
     test:assertEquals(response.model,model,"Expected model to be " + model);
     test:assertEquals(response.choices.length(),1,"Expected one choice in response");
@@ -298,7 +298,7 @@ function testpostembeddings() returns error?{
         user: "user-1234"
     };
 
-    CreateEmbeddingResponse response = check openai->/embeddings.post(request,headers=headers);
+    CreateEmbeddingResponse response = check openai->/embeddings.post(request);
 
     test:assertEquals(response.model,model,"Expected model to be "+model);
     test:assertNotEquals(response.usage,"","Expected usage to be set");

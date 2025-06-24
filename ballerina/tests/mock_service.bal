@@ -196,15 +196,6 @@ http:Service mockService = service object {
 
 // POST /threads - Create a new thread
 resource function post threads(http:Caller caller, http:Request req) returns error? {
-    string|http:HeaderNotFoundError betaHeader = req.getHeader("OpenAI-Beta");
-    if betaHeader is http:HeaderNotFoundError || betaHeader != "assistants=v2" {
-        http:Response errorResponse = new;
-        errorResponse.statusCode = 400;
-        errorResponse.setJsonPayload({"error": "Missing or invalid OpenAI-Beta header"});
-        check caller->respond(errorResponse);
-        return;
-    }
-
     json|error requestBody = req.getJsonPayload();
     if requestBody is error {
         http:Response errorResponse = new;
@@ -232,15 +223,6 @@ resource function post threads(http:Caller caller, http:Request req) returns err
 
 // GET /threads/[threadId] - Retrieve a thread by ID
 resource function get threads/[string threadId](http:Caller caller, http:Request req) returns error? {
-    string|http:HeaderNotFoundError betaHeader = req.getHeader("OpenAI-Beta");
-    if betaHeader is http:HeaderNotFoundError || betaHeader != "assistants=v2" {
-        http:Response errorResponse = new;
-        errorResponse.statusCode = 400;
-        errorResponse.setJsonPayload({"error": "Missing or invalid OpenAI-Beta header"});
-        check caller->respond(errorResponse);
-        return;
-    }
-
     json|error thread;
     lock {
         thread = threads[threadId];
@@ -259,15 +241,6 @@ resource function get threads/[string threadId](http:Caller caller, http:Request
 
 // DELETE /threads/[threadId] - Delete a thread
 resource function delete threads/[string threadId](http:Caller caller, http:Request req) returns error? {
-    string|http:HeaderNotFoundError betaHeader = req.getHeader("OpenAI-Beta");
-    if betaHeader is http:HeaderNotFoundError || betaHeader != "assistants=v2" {
-        http:Response errorResponse = new;
-        errorResponse.statusCode = 400;
-        errorResponse.setJsonPayload({"error": "Missing or invalid OpenAI-Beta header"});
-        check caller->respond(errorResponse);
-        return;
-    }
-
     json|error thread;
     lock {
         thread = threads[threadId];
@@ -295,15 +268,6 @@ resource function delete threads/[string threadId](http:Caller caller, http:Requ
 
 // POST /threads/runs - Create a thread and run
 resource function post threads/runs(http:Caller caller, http:Request req) returns error? {
-    string|http:HeaderNotFoundError betaHeader = req.getHeader("OpenAI-Beta");
-    if betaHeader is http:HeaderNotFoundError || betaHeader != "assistants=v2" {
-        http:Response errorResponse = new;
-        errorResponse.statusCode = 400;
-        errorResponse.setJsonPayload({"error": "Missing or invalid OpenAI-Beta header"});
-        check caller->respond(errorResponse);
-        return;
-    }
-
     json|error requestBody = req.getJsonPayload();
     if requestBody is error {
         http:Response errorResponse = new;
@@ -360,14 +324,6 @@ resource function post threads/runs(http:Caller caller, http:Request req) return
 }
 
 resource function post audio/speech(http:Caller caller, http:Request req) returns error? {
-    string|http:HeaderNotFoundError betaHeader = req.getHeader("OpenAI-Beta");
-    if betaHeader is http:HeaderNotFoundError || betaHeader != "assistants=v2" {
-        http:Response errorResponse = new;
-        errorResponse.statusCode = 400;
-        errorResponse.setJsonPayload({"error": "Missing or invalid OpenAI-Beta header"});
-        check caller->respond(errorResponse);
-        return;
-    }
     json|error requestBody = req.getJsonPayload();
 
     if requestBody is error {
@@ -430,15 +386,6 @@ resource function post chat/completions(http:Caller caller, http:Request req) re
 }
 
 resource function post completions(http:Caller caller, http:Request req) returns error?{
-    string|http:HeaderNotFoundError betaHeader = req.getHeader("OpenAI-Beta");
-    if betaHeader is http:HeaderNotFoundError || betaHeader != "assistants=v2" {
-        http:Response errorResponse = new;
-        errorResponse.statusCode = 400;
-        errorResponse.setJsonPayload({"error": "Missing or invalid OpenAI-Beta header"});
-        check caller->respond(errorResponse);
-        return;
-    }
-
     json|error requestBody = req.getJsonPayload();
 
     if requestBody is error {
@@ -493,14 +440,6 @@ resource function post completions(http:Caller caller, http:Request req) returns
 }
 
 resource function post embeddings(http:Caller caller,http:Request req) returns  error?{
-    string|http:HeaderNotFoundError betaHeader = req.getHeader("OpenAI-Beta");
-    if betaHeader is http:HeaderNotFoundError || betaHeader != "assistants=v2" {
-        http:Response errorResponse = new;
-        errorResponse.statusCode = 400;
-        errorResponse.setJsonPayload({"error": "Missing or invalid OpenAI-Beta header"});
-        check caller->respond(errorResponse);
-        return;
-    }
     json|error requestBody = req.getJsonPayload();
     if requestBody is error {
             http:Response errorResponse = new;
@@ -536,5 +475,3 @@ function init() returns error? {
     log:printInfo("Mock service started on port 9090");
     check httpListener.attach(mockService, "/");
 }
-
-

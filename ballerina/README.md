@@ -1,17 +1,79 @@
-## Overview
+# Running Tests
 
-[//]: # (TODO: Add overview mentioning the purpose of the module, supported REST API versions, and other high-level details.)
+## Prerequisites
+You need an Access token from OpenAI developer account.
 
-## Setup guide
+To do this, refer to [OpenAI API Documentation](https://platform.openai.com/docs/api-reference/introduction).
 
-[//]: # (TODO: Add detailed steps to obtain credentials and configure the module.)
+# Running Tests
 
-## Quickstart
+There are two test environments for running the OpenAI connector tests. The default test environment is the mock server for OpenAI API. The other test environment is the actual OpenAI API. 
 
-[//]: # (TODO: Add a quickstart guide to demonstrate a basic functionality of the module, including sample code snippets.)
+You can run the tests in either of these environments and each has its own compatible set of tests.
 
-## Examples
+ Test Groups | Environment                                       
+-------------|---------------------------------------------------
+ mock_tests  | Mock server for OpenAI API (Defualt Environment) 
+ live_tests  | OpenAI API                                       
 
-The `Ballerina OpenAI Connector` connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/module-ballerinax-openai/tree/main/examples/), covering the following use cases:
+## Running Tests in the Mock Server
 
-[//]: # (TODO: Add examples)
+To execute the tests on the mock server, ensure that the `IS_LIVE_SERVER` environment variable is either set to `false` or unset before initiating the tests. 
+
+This environment variable can be configured within the `Config.toml` file located in the tests directory or specified as an environmental variable.
+
+#### Using a Config.toml File
+
+Create a `Config.toml` file in the tests directory and the following content:
+
+```toml
+isLiveServer = false
+```
+
+#### Using Environment Variables
+
+Alternatively, you can set your authentication credentials as environment variables:
+If you are using linux or mac, you can use following method:
+```bash
+   export IS_LIVE_SERVER=false
+```
+If you are using Windows you can use following method:
+```bash
+   setx IS_LIVE_SERVER false
+```
+Then, run the following command to run the tests:
+
+```bash
+   ./gradlew clean test
+```
+
+## Running Tests Against OpenAI Live API
+
+#### Using a Config.toml File
+
+Create a `Config.toml` file in the tests directory and add your authentication credentials a
+
+```toml
+   isLiveServer = true
+   token = "<your-openai-access-token>"
+```
+
+#### Using Environment Variables
+
+Alternatively, you can set your authentication credentials as environment variables:
+If you are using linux or mac, you can use following method:
+```bash
+   export IS_LIVE_SERVER=true
+   export OPENAI_TOKEN ="<your-openai-access-token>"
+```
+
+If you are using Windows you can use following method:
+```bash
+   setx IS_LIVE_SERVER true
+   setx OPENAI_TOKEN <your-openai-access-token>
+```
+Then, run the following command to run the tests:
+
+```bash
+   ./gradlew clean test 
+```

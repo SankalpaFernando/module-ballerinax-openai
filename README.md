@@ -13,8 +13,72 @@
 [//]: # (TODO: Add detailed steps to obtain credentials and configure the module.)
 
 ## Quickstart
+To use the `OpenAI` connector in your Ballerina application, update the `.bal` file as follows:
 
-[//]: # (TODO: Add a quickstart guide to demonstrate a basic functionality of the module, including sample code snippets.)
+### Step 1: Import the module
+
+Import the `openai` module.
+
+```ballerina
+import ballerinax/openai;
+```
+
+### Step 2: Instantiate a new connector
+
+1. Create a `Config.toml` file and, configure the obtained credentials in the above steps as follows:
+
+```bash
+token = "<Access Token>"
+```
+
+2. Create a `openai:ConnectionConfig` with the obtained access token and initialize the connector with it.
+
+```ballerina
+configurable string token = ?;
+
+final openai:Client openai = check new({
+    auth: {
+        token
+    }
+});
+```
+
+### Step 3: Invoke the connector operation
+
+Now, utilize the available connector operations.
+
+#### Create an Assistant
+
+```ballerina
+public function main() returns error? {
+   openai:CreateAssistantRequest request = {
+        model: "gpt-4o",
+        name: "Math Tutor",
+        description: null,
+        instructions: "You are a personal math tutor.",
+        tools: [{"type": "code_interpreter"}],
+        toolResources: {"code_interpreter": {"file_ids": []}},
+        metadata: {},
+        topP: 1.0,
+        temperature: 1.0,
+        responseFormat: {"type": "text"}
+   };
+   //Note: This header is required because the Assistants API is currently in beta, and OpenAI requires explicit opt-in.
+   configurable map<string> headers = {
+    "OpenAI-Beta": "assistants=v2"
+   };
+
+   openai:AssistantObject response = check openai->/assistants.post(request, headers = headers);
+
+}
+```
+
+### Step 4: Run the Ballerina application
+
+```bash
+bal run
+```
+
 
 ## Examples
 

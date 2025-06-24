@@ -1,4 +1,4 @@
-_Author_:  Sankalpa Fernando \
+_Author_:  @sankalpafernando \
 _Created_: 2025-06-17 \
 _Updated_: <!-- TODO: Add date --> \
 _Edition_: Swan Lake
@@ -173,4 +173,4 @@ The following command was used to generate the Ballerina client from the OpenAPI
 ```bash
 # TODO: Add OpenAPI CLI command used to generate the client
 ```
-Note: The license year is hardcoded to 2024, change if necessary.
+Note: The license year is hardcoded to 2025, change if necessary.
