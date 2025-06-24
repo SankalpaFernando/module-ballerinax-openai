@@ -1,14 +1,19 @@
 # Examples
 
-The `ballerinax/openai` connector provides practical examples illustrating usage in various scenarios.
+The opeanai connector provides practical examples illustrating usage in various scenarios. Explore these examples, covering use cases like Assistant Creation and Embedding Generation.
 
 [//]: # (TODO: Add examples)
-1. 
-2. 
-
+1. [Assistant Generation](https://github.com/ballerina-platform/module-ballerinax-twitter/tree/main/examples/DM-mentions) - Build Assistants that can call models and use tools.
+2.  [Embedding Generation](https://github.com/ballerina-platform/module-ballerinax-twitter/tree/main/examples/DM-mentions) - 
+Get a vector representation of a given input that can be easily consumed by machine learning models and algorithms.
 ## Prerequisites
+1. Generate OpenAI credentials to authenticate the connector as described in the [Setup guide](https://central.ballerina.io/ballerinax/openai/latest#setup-guide).
 
-[//]: # (TODO: Add prerequisites)
+2. For each example, create a `Config.toml` file the related configuration. Here's an example of how your `Config.toml` file should look:
+
+    ```toml
+    token = "<Access Token>"
+    ```
 
 ## Running an example
 
