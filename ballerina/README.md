@@ -1,79 +1,198 @@
-# Running Tests
+## Overview
 
-## Prerequisites
-You need an Access token from OpenAI developer account.
+OpenAI provides a suite of powerful AI models and services for natural language processing, code generation, image understanding, and more.
 
-To do this, refer to [OpenAI API Documentation](https://platform.openai.com/docs/api-reference/introduction).
+The `ballerinax/openai` package offers APIs to easily connect and interact with OpenAI's RESTful API endpoints, enabling seamless integration with models such as GPT, Whisper, and DALL·E.
 
-# Running Tests
 
-There are two test environments for running the OpenAI connector tests. The default test environment is the mock server for OpenAI API. The other test environment is the actual OpenAI API. 
+## Setup guide
 
-You can run the tests in either of these environments and each has its own compatible set of tests.
+To use the OpenAI connector, you must have access to the OpenAI API through an OpenAI account and API key.  
+If you do not have an OpenAI account, you can sign up for one [here](https://platform.openai.com/signup).
 
- Test Groups | Environment                                       
--------------|---------------------------------------------------
- mock_tests  | Mock server for OpenAI API (Defualt Environment) 
- live_tests  | OpenAI API                                       
 
-## Running Tests in the Mock Server
+### Step 1: Create/Open an OpenAI Account
+- Visit the [OpenAI Platform](https://platform.openai.com/).
+- Sign in with your existing credentials, or create a new OpenAI account if you don’t already have one.
 
-To execute the tests on the mock server, ensure that the `IS_LIVE_SERVER` environment variable is either set to `false` or unset before initiating the tests. 
 
-This environment variable can be configured within the `Config.toml` file located in the tests directory or specified as an environmental variable.
+### Step 2: Navigate to API Keys
+- Once logged in, click on your profile icon in the top-right corner.
+- In the dropdown menu, click **"Your Profile"**, then navigate to the **"API Keys"** section from the sidebar. 
+- Or directly visit: [https://platform.openai.com/api-keys](https://platform.openai.com/api-keys)
 
-#### Using a Config.toml File
 
-Create a `Config.toml` file in the tests directory and the following content:
+### Step 3: Generate an API Key
+- Click the **“+ Create new secret key”** button.
+- Provide a name for the key (e.g., "Connector Key") and confirm.
+- **Copy the generated API key** and store it securely.  
+  ⚠️ You will not be able to view it again later.
 
-```toml
-isLiveServer = false
+
+## Quickstart
+To use the `OpenAI` connector in your Ballerina application, update the `.bal` file as follows:
+
+### Step 1: Import the module
+
+Import the `openai` module.
+
+```ballerina
+import ballerinax/openai;
 ```
 
-#### Using Environment Variables
+### Step 2: Instantiate a new connector
 
-Alternatively, you can set your authentication credentials as environment variables:
-If you are using linux or mac, you can use following method:
-```bash
-   export IS_LIVE_SERVER=false
+1. Create a `Config.toml` file and, configure the obtained credentials in the above steps as follows:
+
+   ```bash
+   token = "<Access Token>"
+   ```
+
+2. Create a `openai:ConnectionConfig` with the obtained access token and initialize the connector with it.
+
+   ```ballerina
+   configurable string token = ?;
+
+   final openai:Client openai = check new({
+      auth: {
+         token
+      }
+   });
+   ```
+
+### Step 3: Invoke the connector operation
+
+Now, utilize the available connector operations.
+
+#### Create an Assistant
+
+```ballerina
+public function main() returns error? {
+   openai:CreateAssistantRequest request = {
+        model: "gpt-4o",
+        name: "Math Tutor",
+        description: null,
+        instructions: "You are a personal math tutor.",
+        tools: [{"type": "code_interpreter"}],
+        toolResources: {"code_interpreter": {"file_ids": []}},
+        metadata: {},
+        topP: 1.0,
+        temperature: 1.0,
+        responseFormat: {"type": "text"}
+   };
+
+   //Note: This header is required because the Assistants API is currently in beta, and OpenAI requires explicit opt-in.
+   configurable map<string> headers = {
+    "OpenAI-Beta": "assistants=v2"
+   };
+
+   openai:AssistantObject response = check openai->/assistants.post(request, headers = headers);
+
+}
 ```
-If you are using Windows you can use following method:
-```bash
-   setx IS_LIVE_SERVER false
-```
-Then, run the following command to run the tests:
+
+### Step 4: Run the Ballerina application
 
 ```bash
+bal run
+```
+
+
+## Examples
+
+The `Ballerina OpenAI Connector` connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/module-ballerinax-openai/tree/main/examples/), covering the following use cases:
+
+[//]: # (TODO: Add examples)
+
+## Build from the source
+
+### Setting up the prerequisites
+
+1. Download and install Java SE Development Kit (JDK) version 21. You can download it from either of the following sources:
+
+    * [Oracle JDK](https://www.oracle.com/java/technologies/downloads/)
+    * [OpenJDK](https://adoptium.net/)
+
+   > **Note:** After installation, remember to set the `JAVA_HOME` environment variable to the directory where JDK was installed.
+
+2. Download and install [Ballerina Swan Lake](https://ballerina.io/).
+
+3. Download and install [Docker](https://www.docker.com/get-started).
+
+   > **Note**: Ensure that the Docker daemon is running before executing any tests.
+
+4. Export Github Personal access token with read package permissions as follows,
+
+    ```bash
+    export packageUser=<Username>
+    export packagePAT=<Personal access token>
+    ```
+
+### Build options
+
+Execute the commands below to build from the source.
+
+1. To build the package:
+
+   ```bash
+   ./gradlew clean build
+   ```
+
+2. To run the tests:
+
+   ```bash
    ./gradlew clean test
-```
+   ```
 
-## Running Tests Against OpenAI Live API
+3. To build the without the tests:
 
-#### Using a Config.toml File
+   ```bash
+   ./gradlew clean build -x test
+   ```
 
-Create a `Config.toml` file in the tests directory and add your authentication credentials a
+4. To run tests against different environments:
 
-```toml
-   isLiveServer = true
-   token = "<your-openai-access-token>"
-```
+   ```bash
+   ./gradlew clean test -Pgroups=<Comma separated groups/test cases>
+   ```
 
-#### Using Environment Variables
+5. To debug the package with a remote debugger:
 
-Alternatively, you can set your authentication credentials as environment variables:
-If you are using linux or mac, you can use following method:
-```bash
-   export IS_LIVE_SERVER=true
-   export OPENAI_TOKEN ="<your-openai-access-token>"
-```
+   ```bash
+   ./gradlew clean build -Pdebug=<port>
+   ```
 
-If you are using Windows you can use following method:
-```bash
-   setx IS_LIVE_SERVER true
-   setx OPENAI_TOKEN <your-openai-access-token>
-```
-Then, run the following command to run the tests:
+6. To debug with the Ballerina language:
 
-```bash
-   ./gradlew clean test 
-```
+   ```bash
+   ./gradlew clean build -PbalJavaDebug=<port>
+   ```
+
+7. Publish the generated artifacts to the local Ballerina Central repository:
+
+    ```bash
+    ./gradlew clean build -PpublishToLocalCentral=true
+    ```
+
+8. Publish the generated artifacts to the Ballerina Central repository:
+
+   ```bash
+   ./gradlew clean build -PpublishToCentral=true
+   ```
+
+## Contribute to Ballerina
+
+As an open-source project, Ballerina welcomes contributions from the community.
+
+For more information, go to the [contribution guidelines](https://github.com/ballerina-platform/ballerina-lang/blob/master/CONTRIBUTING.md).
+
+## Code of conduct
+
+All the contributors are encouraged to read the [Ballerina Code of Conduct](https://ballerina.io/code-of-conduct).
+
+## Useful links
+
+* For more information go to the [`openai` package](https://central.ballerina.io/ballerinax/openai/latest).
+* For example demonstrations of the usage, go to [Ballerina By Examples](https://ballerina.io/learn/by-example/).
+* Chat live with us via our [Discord server](https://discord.gg/ballerinalang).
+* Post all technical questions on Stack Overflow with the [#ballerina](https://stackoverflow.com/questions/tagged/ballerina) tag.

@@ -7,7 +7,7 @@ configurable map<string> headers = {
 };
 public function main() returns error? {
     final openai:Client openaiClient = check new ({
-        auth: {token: token}
+        auth: {token}
     });
 
     // Create Assistant 

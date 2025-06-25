@@ -5,7 +5,7 @@ configurable string token = ?;
 
 public function main() returns error? {
     final openai:Client openaiClient = check new ({
-        auth: {token: token}
+        auth: {token}
     });
 
     //Create Embedding
