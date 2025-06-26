@@ -182,7 +182,6 @@ function testpostThreadAndRun() returns error? {
         toolChoice: "auto",
         truncationStrategy: {lastMessages: 10, 'type: "auto"},
         parallelToolCalls: false
-
     };
 
     RunObject response = check openai->/threads/runs.post(request, headers = headers);
@@ -205,11 +204,9 @@ function testpostThreadAndRun() returns error? {
     groups: ["live_tests", "mock_tests", "assistants"]
 }
 function testgetThreadById() returns error? {
-
     ThreadObject response = check openai->/threads/[threadId].get(headers = headers);
     test:assertEquals(response.id, threadId, "Expected thread ID to match");
     test:assertNotEquals(response.createdAt, 0, "Expected thread creation timestamp to be set");
-
 }
 
 @test:Config {
@@ -323,11 +320,9 @@ function testdeleteThread() returns error? {
     if response is error {
         return error("Failed to delete thread: " + response.message());
     }
-
     test:assertEquals(response.deleted, true, "Expected thread to be deleted successfully");
     test:assertEquals(response.id, threadId, "Expected deleted thread ID to match");
 }
-
 
 @test:AfterSuite {}
 function deleteResources() returns error? {

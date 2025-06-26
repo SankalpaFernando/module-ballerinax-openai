@@ -18,29 +18,18 @@ You can run the tests in either of these environments and each has its own compa
 
 ## Running Tests in the Mock Server
 
-To execute the tests on the mock server, ensure that the `IS_LIVE_SERVER` environment variable is either set to `false` or unset before initiating the tests. 
+To execute the tests on the mock server, ensure that the `islive` environment variable is either set to `false` or unset before initiating the tests. 
 
-This environment variable can be configured within the `Config.toml` file located in the tests directory or specified as an environmental variable.
+This environment variable can be configured within the `Config.toml` file located in the tests directory.
 
 #### Using a Config.toml File
 
 Create a `Config.toml` file in the tests directory and the following content:
 
 ```toml
-isLiveServer = false
+islive = false
 ```
 
-#### Using Environment Variables
-
-Alternatively, you can set your authentication credentials as environment variables:
-If you are using linux or mac, you can use following method:
-```bash
-   export IS_LIVE_SERVER=false
-```
-If you are using Windows you can use following method:
-```bash
-   setx IS_LIVE_SERVER false
-```
 Then, run the following command to run the tests:
 
 ```bash
@@ -54,23 +43,8 @@ Then, run the following command to run the tests:
 Create a `Config.toml` file in the tests directory and add your authentication credentials a
 
 ```toml
-   isLiveServer = true
+   islive = true
    token = "<your-openai-access-token>"
-```
-
-#### Using Environment Variables
-
-Alternatively, you can set your authentication credentials as environment variables:
-If you are using linux or mac, you can use following method:
-```bash
-   export IS_LIVE_SERVER=true
-   export OPENAI_TOKEN ="<your-openai-access-token>"
-```
-
-If you are using Windows you can use following method:
-```bash
-   setx IS_LIVE_SERVER true
-   setx OPENAI_TOKEN <your-openai-access-token>
 ```
 Then, run the following command to run the tests:
 

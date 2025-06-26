@@ -30,8 +30,15 @@ isolated function getCurrentTimestamp() returns int {
 
 http:Service mockService = service object {
 
-    // GET /assistants - List all assistants
     resource function get assistants(http:Caller caller, http:Request req) returns error? {
+        string|http:HeaderNotFoundError betaHeader = req.getHeader("OpenAI-Beta");
+        if betaHeader is http:HeaderNotFoundError || betaHeader != "assistants=v2" {
+            http:Response errorResponse = new;
+            errorResponse.statusCode = 400;
+            errorResponse.setJsonPayload({"error": "Missing or invalid OpenAI-Beta header"});
+            check caller->respond(errorResponse);
+            return;
+        }
 
         json[] assistantList = [];
         lock {
@@ -39,7 +46,6 @@ http:Service mockService = service object {
                 assistantList.push(assistant);
             }
         }
-
         json responseData = {
             "object": "list",
             "data": assistantList,
@@ -47,20 +53,23 @@ http:Service mockService = service object {
             "last_id": assistantList.length() > 0 ? check assistantList[assistantList.length() - 1].id : null,
             "has_more": false
         };
-
         check caller->respond(responseData);
     }
 
-    // POST /assistants - Create a new assistant
     resource function post assistants(http:Caller caller, http:Request req) returns error? {
-        // Verify OpenAI-Beta header
-        
-
         json|error requestBody = req.getJsonPayload();
         if requestBody is error {
             http:Response errorResponse = new;
             errorResponse.statusCode = 400;
             errorResponse.setJsonPayload({"error": "Invalid JSON payload"});
+            check caller->respond(errorResponse);
+            return;
+        }
+        string|http:HeaderNotFoundError betaHeader = req.getHeader("OpenAI-Beta");
+        if betaHeader is http:HeaderNotFoundError || betaHeader != "assistants=v2" {
+            http:Response errorResponse = new;
+            errorResponse.statusCode = 400;
+            errorResponse.setJsonPayload({"error": "Missing or invalid OpenAI-Beta header"});
             check caller->respond(errorResponse);
             return;
         }
@@ -81,21 +90,25 @@ http:Service mockService = service object {
             "temperature": check requestBody.temperature ?: 1.0,
             "response_format": check requestBody.response_format ?: {"type": "text"}
         };
-
         lock {
             assistants[assistantId] = responseData;
         }
-
         check caller->respond(responseData);
     }
     resource function get assistants/[string assistantId](http:Caller caller, http:Request req) returns error? {
-        // Verify OpenAI-Beta header
-       
+        string|http:HeaderNotFoundError betaHeader = req.getHeader("OpenAI-Beta");
+        if betaHeader is http:HeaderNotFoundError || betaHeader != "assistants=v2" {
+            http:Response errorResponse = new;
+            errorResponse.statusCode = 400;
+            errorResponse.setJsonPayload({"error": "Missing or invalid OpenAI-Beta header"});
+            check caller->respond(errorResponse);
+            return;
+        }
+
         json|error assistant;
         lock {
             assistant = assistants[assistantId];
         }
-
         if assistant is error || assistant is () {
             http:Response errorResponse = new;
             errorResponse.statusCode = 404;
@@ -103,11 +116,10 @@ http:Service mockService = service object {
             check caller->respond(errorResponse);
             return;
         }
-
         check caller->respond(assistant);
     }
+    
     resource function post assistants/[string assistantId](http:Caller caller, http:Request req) returns error? {        
-
         json|error requestBody = req.getJsonPayload();
         if requestBody is error {
             http:Response errorResponse = new;
@@ -116,12 +128,19 @@ http:Service mockService = service object {
             check caller->respond(errorResponse);
             return;
         }
+        string|http:HeaderNotFoundError betaHeader = req.getHeader("OpenAI-Beta");
+        if betaHeader is http:HeaderNotFoundError || betaHeader != "assistants=v2" {
+            http:Response errorResponse = new;
+            errorResponse.statusCode = 400;
+            errorResponse.setJsonPayload({"error": "Missing or invalid OpenAI-Beta header"});
+            check caller->respond(errorResponse);
+            return;
+        }
 
         json|error existingAssistant;
         lock {
             existingAssistant = assistants[assistantId];
         }
-
         if existingAssistant is error || existingAssistant is () {
             http:Response errorResponse = new;
             errorResponse.statusCode = 404;
@@ -129,7 +148,6 @@ http:Service mockService = service object {
             check caller->respond(errorResponse);
             return;
         }
-
         json responseData = {
             "id": assistantId,
             "object": "assistant",
@@ -145,15 +163,12 @@ http:Service mockService = service object {
             "temperature": check requestBody.temperature ?: check existingAssistant.temperature,
             "response_format": check requestBody.response_format ?: check existingAssistant.response_format
         };
-
         lock {
             assistants[assistantId] = responseData;
         }
-
         check caller->respond(responseData);
     }
 
-    // // DELETE /assistants/[assistantId] - Delete an assistant
     resource function delete assistants/[string assistantId](http:Caller caller, http:Request req) returns error? {
         string|http:HeaderNotFoundError betaHeader = req.getHeader("OpenAI-Beta");
         if betaHeader is http:HeaderNotFoundError || betaHeader != "assistants=v2" {
@@ -165,12 +180,9 @@ http:Service mockService = service object {
         }
 
         json|error assistant;
-
         lock{
            assistant = assistants[assistantId]; 
         }
-        
-
         if assistant is error || assistant is () {
             http:Response errorResponse = new;
             errorResponse.statusCode = 404;
@@ -178,7 +190,6 @@ http:Service mockService = service object {
             check caller->respond(errorResponse);
             return;
         }
-
         lock {
             _ = assistants.remove(assistantId);
         }
@@ -187,162 +198,10 @@ http:Service mockService = service object {
             "object": "assistant.deleted",
             "deleted": true
         };
-
         check caller->respond(responseData);
     }
 
-    // In-memory storage for threads and runs
-
-
-// POST /threads - Create a new thread
-resource function post threads(http:Caller caller, http:Request req) returns error? {
-    json|error requestBody = req.getJsonPayload();
-    if requestBody is error {
-        http:Response errorResponse = new;
-        errorResponse.statusCode = 400;
-        errorResponse.setJsonPayload({"error": "Invalid JSON payload"});
-        check caller->respond(errorResponse);
-        return;
-    }
-
-    string threadId = "thread_" + time:utcNow()[0].toString();
-    json responseData = {
-        "id": threadId,
-        "object": "thread",
-        "created_at": getCurrentTimestamp(),
-        "metadata": check requestBody.metadata ?: {},
-        "tool_resources": check requestBody.tool_resources ?: {"code_interpreter": {"file_ids": []}}
-    };
-
-    lock {
-        threads[threadId] = responseData;
-    }
-
-    check caller->respond(responseData);
-}
-
-// GET /threads/[threadId] - Retrieve a thread by ID
-resource function get threads/[string threadId](http:Caller caller, http:Request req) returns error? {
-    json|error thread;
-    lock {
-        thread = threads[threadId];
-    }
-
-    if thread is error || thread is () {
-        http:Response errorResponse = new;
-        errorResponse.statusCode = 404;
-        errorResponse.setJsonPayload({"error": "Thread not found"});
-        check caller->respond(errorResponse);
-        return;
-    }
-
-    check caller->respond(thread);
-}
-
-// DELETE /threads/[threadId] - Delete a thread
-resource function delete threads/[string threadId](http:Caller caller, http:Request req) returns error? {
-    json|error thread;
-    lock {
-        thread = threads[threadId];
-    }
-
-    if thread is error || thread is () {
-        http:Response errorResponse = new;
-        errorResponse.statusCode = 404;
-        errorResponse.setJsonPayload({"error": "Thread not found"});
-        check caller->respond(errorResponse);
-        return;
-    }
-
-    lock {
-        _ = threads.remove(threadId);
-    }
-    json responseData = {
-        "id": threadId,
-        "object": "thread.deleted",
-        "deleted": true
-    };
-
-    check caller->respond(responseData);
-}
-
-// POST /threads/runs - Create a thread and run
-resource function post threads/runs(http:Caller caller, http:Request req) returns error? {
-    json|error requestBody = req.getJsonPayload();
-    if requestBody is error {
-        http:Response errorResponse = new;
-        errorResponse.statusCode = 400;
-        errorResponse.setJsonPayload({"error": "Invalid JSON payload"});
-        check caller->respond(errorResponse);
-        return;
-    }
-
-    string runId = "run_" + time:utcNow()[0].toString();
-    string threadId = "thread_" + time:utcNow()[0].toString();
-    string assistantId = check requestBody.assistant_id.ensureType(string);
-
-    // Create a thread for the run
-    json threadData = {
-        "id": threadId,
-        "object": "thread",
-        "created_at": getCurrentTimestamp(),
-        "metadata": check requestBody.metadata ?: {},
-        "tool_resources": check requestBody.thread.tool_resources ?: {"code_interpreter": {"file_ids": []}}
-    };
-
-    lock {
-        threads[threadId] = threadData;
-    }
-
-    json responseData = {
-        "id": runId,
-        "object": "thread.run",
-        "created_at": getCurrentTimestamp(),
-        "assistant_id": assistantId,
-        "thread_id": threadId,
-        "status": "queued",
-        "model": check requestBody.model ?: "gpt-4o",
-        "instructions": check requestBody.instructions ?: "You are a personal math tutor.",
-        "tools": check requestBody.tools ?: [{"type": "code_interpreter"}],
-        "tool_resources": check requestBody.tool_resources ?: {"code_interpreter": {"file_ids": []}},
-        "metadata": check requestBody.metadata ?: {},
-        "top_p": check requestBody.top_p ?: 1.0,
-        "temperature": check requestBody.temperature ?: 1.0,
-        "max_prompt_tokens": check requestBody.max_prompt_tokens ?: 256,
-        "max_completion_tokens": check requestBody.max_completion_tokens ?: 128,
-        "response_format": check requestBody.response_format ?: "auto",
-        "tool_choice": check requestBody.tool_choice ?: "auto",
-        "truncation_strategy": check requestBody.truncation_strategy ?: {"last_messages": 10, "type": "auto"},
-        "parallel_tool_calls": check requestBody.parallel_tool_calls ?: false
-    };
-
-    lock {
-        runs[runId] = responseData;
-    }
-
-    check caller->respond(responseData);
-}
-
-resource function post audio/speech(http:Caller caller, http:Request req) returns error? {
-    json|error requestBody = req.getJsonPayload();
-
-    if requestBody is error {
-        http:Response errorResponse = new;
-        errorResponse.statusCode = 400;
-        errorResponse.setJsonPayload({"error": "Invalid JSON payload"});
-        check caller->respond(errorResponse);
-        return;
-    }
-
-    byte[] mockAudioData = "mock_mp3_data".toBytes();
-    http:Response response = new;
-    response.setHeader("Transfer-Encoding", "chunked");
-    response.setHeader("Content-Type", "application/octet-stream");
-    response.setBinaryPayload(mockAudioData);
-    check caller->respond(response);
-}
-
-resource function post chat/completions(http:Caller caller, http:Request req) returns error? {
+    resource function post threads(http:Caller caller, http:Request req) returns error? {
         json|error requestBody = req.getJsonPayload();
         if requestBody is error {
             http:Response errorResponse = new;
@@ -351,123 +210,249 @@ resource function post chat/completions(http:Caller caller, http:Request req) re
             check caller->respond(errorResponse);
             return;
         }
-        string model = check requestBody.model.ensureType(string);
-        json[] messages = check requestBody.messages.ensureType();
-        string completionId = "chatcmpl_" + time:utcNow()[0].toString();
-        string userContent = "";
-        foreach json msg in messages {
-            if check msg.role == "user" {
-                userContent = check msg.content.ensureType(string);
-                break;
-            }
-        }
+
+        string threadId = "thread_" + time:utcNow()[0].toString();
         json responseData = {
-            "id": completionId,
-            "object": "chat.completion",
-            "created": getCurrentTimestamp(),
-            "model": model,
-            "choices": [
-                {
-                    "index": 0,
-                    "message": {
-                        "role": "assistant",
-                        "content": "Assistant response: " + userContent
-                    },
-                    "finish_reason": "stop"
-                }
-            ],
-            "usage": {
-                "prompt_tokens": 10,
-                "completion_tokens": 10,
-                "total_tokens": 20
-            }
+            "id": threadId,
+            "object": "thread",
+            "created_at": getCurrentTimestamp(),
+            "metadata": check requestBody.metadata ?: {},
+            "tool_resources": check requestBody.tool_resources ?: {"code_interpreter": {"file_ids": []}}
         };
+        lock {
+            threads[threadId] = responseData;
+        }
         check caller->respond(responseData);
-}
-
-resource function post completions(http:Caller caller, http:Request req) returns error?{
-    json|error requestBody = req.getJsonPayload();
-
-    if requestBody is error {
-        http:Response errorResponse = new;
-        errorResponse.statusCode = 400;
-        errorResponse.setJsonPayload({"error": "Invalid JSON payload"});
-        check caller->respond(errorResponse);
-        return;
     }
 
+    resource function get threads/[string threadId](http:Caller caller, http:Request req) returns error? {
+        json|error thread;
+        lock {
+            thread = threads[threadId];
+        }
+        if thread is error || thread is () {
+            http:Response errorResponse = new;
+            errorResponse.statusCode = 404;
+            errorResponse.setJsonPayload({"error": "Thread not found"});
+            check caller->respond(errorResponse);
+            return;
+        }
+        check caller->respond(thread);
+    }
 
-    string model = check requestBody.model.ensureType(string);
+    resource function delete threads/[string threadId](http:Caller caller, http:Request req) returns error? {
+        json|error thread;
+        lock {
+            thread = threads[threadId];
+        }
+        if thread is error || thread is () {
+            http:Response errorResponse = new;
+            errorResponse.statusCode = 404;
+            errorResponse.setJsonPayload({"error": "Thread not found"});
+            check caller->respond(errorResponse);
+            return;
+        }
+        lock {
+            _ = threads.remove(threadId);
+        }
+        json responseData = {
+            "id": threadId,
+            "object": "thread.deleted",
+            "deleted": true
+        };
+        check caller->respond(responseData);
+    }
 
-    json responseData = {
-        id: "1",
-        choices:[
-            {
-                finish_reason: "stop",
-                index: 0,
-                logprobs: {
-                    text_offset: [0],
-                    token_logprobs: [0],
-                    tokens: ["string"],
-                    top_logprobs: []
-                },
-                text: "string"
-            }
-        ],
-        created: time:monotonicNow(),
-        model: model,
-        system_fingerprint: "string",
-        usage: {
-            completion_tokens: 0,
-            prompt_tokens: 0,
-            total_tokens: 0,
-            completion_tokens_details: {
-            accepted_prediction_tokens: 0,
-            audio_tokens: 0,
-            reasoning_tokens: 0,
-            rejected_prediction_tokens: 0
-            },
-            prompt_tokens_details: {
-            audio_tokens: 0,
-            cached_tokens: 0
-            }
-        },
-        "object": "text_completion"
-
-    };
-
-    check caller->respond(responseData);
-}
-
-resource function post embeddings(http:Caller caller,http:Request req) returns  error?{
-    json|error requestBody = req.getJsonPayload();
-    if requestBody is error {
+    resource function post threads/runs(http:Caller caller, http:Request req) returns error? {
+        json|error requestBody = req.getJsonPayload();
+        if requestBody is error {
             http:Response errorResponse = new;
             errorResponse.statusCode = 400;
             errorResponse.setJsonPayload({"error": "Invalid JSON payload"});
             check caller->respond(errorResponse);
             return;
-    }
-    json responseData = {
-        data: [
-            {
-                index:0,
-                embedding: [
-                    0
-                ],
-                "object": "embedding"
-            }
-        ],
-        model:check requestBody.model,
-        "object": "list",
-        usage: {
-            prompt_tokens:0,
-            total_tokens:0
         }
-    };
 
-    check caller->respond(responseData);
-}
+        string runId = "run_" + time:utcNow()[0].toString();
+        string threadId = "thread_" + time:utcNow()[0].toString();
+        string assistantId = check requestBody.assistant_id.ensureType(string);
+        json threadData = {
+            "id": threadId,
+            "object": "thread",
+            "created_at": getCurrentTimestamp(),
+            "metadata": check requestBody.metadata ?: {},
+            "tool_resources": check requestBody.thread.tool_resources ?: {"code_interpreter": {"file_ids": []}}
+        };
+        lock {
+            threads[threadId] = threadData;
+        }
+        json responseData = {
+            "id": runId,
+            "object": "thread.run",
+            "created_at": getCurrentTimestamp(),
+            "assistant_id": assistantId,
+            "thread_id": threadId,
+            "status": "queued",
+            "model": check requestBody.model ?: "gpt-4o",
+            "instructions": check requestBody.instructions ?: "You are a personal math tutor.",
+            "tools": check requestBody.tools ?: [{"type": "code_interpreter"}],
+            "tool_resources": check requestBody.tool_resources ?: {"code_interpreter": {"file_ids": []}},
+            "metadata": check requestBody.metadata ?: {},
+            "top_p": check requestBody.top_p ?: 1.0,
+            "temperature": check requestBody.temperature ?: 1.0,
+            "max_prompt_tokens": check requestBody.max_prompt_tokens ?: 256,
+            "max_completion_tokens": check requestBody.max_completion_tokens ?: 128,
+            "response_format": check requestBody.response_format ?: "auto",
+            "tool_choice": check requestBody.tool_choice ?: "auto",
+            "truncation_strategy": check requestBody.truncation_strategy ?: {"last_messages": 10, "type": "auto"},
+            "parallel_tool_calls": check requestBody.parallel_tool_calls ?: false
+        };
+        lock {
+            runs[runId] = responseData;
+        }
+        check caller->respond(responseData);
+    }
+
+    resource function post audio/speech(http:Caller caller, http:Request req) returns error? {
+        json|error requestBody = req.getJsonPayload();
+        if requestBody is error {
+            http:Response errorResponse = new;
+            errorResponse.statusCode = 400;
+            errorResponse.setJsonPayload({"error": "Invalid JSON payload"});
+            check caller->respond(errorResponse);
+            return;
+        }
+
+        byte[] mockAudioData = "mock_mp3_data".toBytes();
+        http:Response response = new;
+        response.setHeader("Transfer-Encoding", "chunked");
+        response.setHeader("Content-Type", "application/octet-stream");
+        response.setBinaryPayload(mockAudioData);
+        check caller->respond(response);
+    }
+
+    resource function post chat/completions(http:Caller caller, http:Request req) returns error? {
+            json|error requestBody = req.getJsonPayload();
+            if requestBody is error {
+                http:Response errorResponse = new;
+                errorResponse.statusCode = 400;
+                errorResponse.setJsonPayload({"error": "Invalid JSON payload"});
+                check caller->respond(errorResponse);
+                return;
+            }
+
+            string model = check requestBody.model.ensureType(string);
+            json[] messages = check requestBody.messages.ensureType();
+            string completionId = "chatcmpl_" + time:utcNow()[0].toString();
+            string userContent = "";
+            foreach json msg in messages {
+                if check msg.role == "user" {
+                    userContent = check msg.content.ensureType(string);
+                    break;
+                }
+            }
+            json responseData = {
+                "id": completionId,
+                "object": "chat.completion",
+                "created": getCurrentTimestamp(),
+                "model": model,
+                "choices": [
+                    {
+                        "index": 0,
+                        "message": {
+                            "role": "assistant",
+                            "content": "Assistant response: " + userContent
+                        },
+                        "finish_reason": "stop"
+                    }
+                ],
+                "usage": {
+                    "prompt_tokens": 10,
+                    "completion_tokens": 10,
+                    "total_tokens": 20
+                }
+            };
+            check caller->respond(responseData);
+    }
+
+    resource function post completions(http:Caller caller, http:Request req) returns error?{
+        json|error requestBody = req.getJsonPayload();
+        if requestBody is error {
+            http:Response errorResponse = new;
+            errorResponse.statusCode = 400;
+            errorResponse.setJsonPayload({"error": "Invalid JSON payload"});
+            check caller->respond(errorResponse);
+            return;
+        }
+
+        string model = check requestBody.model.ensureType(string);
+        json responseData = {
+            id: "1",
+            choices:[
+                {
+                    finish_reason: "stop",
+                    index: 0,
+                    logprobs: {
+                        text_offset: [0],
+                        token_logprobs: [0],
+                        tokens: ["string"],
+                        top_logprobs: []
+                    },
+                    text: "string"
+                }
+            ],
+            created: time:monotonicNow(),
+            model: model,
+            system_fingerprint: "string",
+            usage: {
+                completion_tokens: 0,
+                prompt_tokens: 0,
+                total_tokens: 0,
+                completion_tokens_details: {
+                accepted_prediction_tokens: 0,
+                audio_tokens: 0,
+                reasoning_tokens: 0,
+                rejected_prediction_tokens: 0
+                },
+                prompt_tokens_details: {
+                audio_tokens: 0,
+                cached_tokens: 0
+                }
+            },
+            "object": "text_completion"
+        };
+        check caller->respond(responseData);
+    }
+
+    resource function post embeddings(http:Caller caller,http:Request req) returns  error?{
+        json|error requestBody = req.getJsonPayload();
+        if requestBody is error {
+                http:Response errorResponse = new;
+                errorResponse.statusCode = 400;
+                errorResponse.setJsonPayload({"error": "Invalid JSON payload"});
+                check caller->respond(errorResponse);
+                return;
+        }
+
+        json responseData = {
+            data: [
+                {
+                    index:0,
+                    embedding: [
+                        0
+                    ],
+                    "object": "embedding"
+                }
+            ],
+            model:check requestBody.model,
+            "object": "list",
+            usage: {
+                prompt_tokens:0,
+                total_tokens:0
+            }
+        };
+        check caller->respond(responseData);
+    }
 
 };
 

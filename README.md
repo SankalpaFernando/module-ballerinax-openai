@@ -10,23 +10,21 @@ OpenAI provides a suite of powerful AI models and services for natural language 
 
 The `ballerinax/openai` package offers APIs to easily connect and interact with OpenAI's RESTful API endpoints, enabling seamless integration with models such as GPT, Whisper, and DALL·E.
 
-
 ## Setup guide
 
 To use the OpenAI connector, you must have access to the OpenAI API through an OpenAI account and API key.  
 If you do not have an OpenAI account, you can sign up for one [here](https://platform.openai.com/signup).
 
-
 ### Step 1: Create/Open an OpenAI Account
 - Visit the [OpenAI Platform](https://platform.openai.com/).
 - Sign in with your existing credentials, or create a new OpenAI account if you don’t already have one.
 
-
 ### Step 2: Navigate to API Keys
 - Once logged in, click on your profile icon in the top-right corner.
-- In the dropdown menu, click **"Your Profile"**, then navigate to the **"API Keys"** section from the sidebar. 
-- Or directly visit: [https://platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+- In the dropdown menu, click **"Your Profile"**, then navigate to the **"Projects"** section from the sidebar to create a new project. 
 
+
+- Or directly visit: [https://platform.openai.com/api-keys](https://platform.openai.com/api-keys)
 
 ### Step 3: Generate an API Key
 - Click the **“+ Create new secret key”** button.
@@ -93,7 +91,6 @@ public function main() returns error? {
    };
 
    openai:AssistantObject response = check openai->/assistants.post(request, headers = headers);
-
 }
 ```
 

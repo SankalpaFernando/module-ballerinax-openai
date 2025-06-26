@@ -32,5 +32,4 @@ public function main() returns error? {
     openai:ListAssistantsResponse listResponse = check openaiClient->/assistants(headers=headers);
 
     io:println("Assistants ->",listResponse,"\n");
-
 }

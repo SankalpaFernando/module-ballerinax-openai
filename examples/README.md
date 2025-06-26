@@ -1,6 +1,6 @@
 # Examples
 
-The opeanai connector provides practical examples illustrating usage in various scenarios. Explore these examples, covering use cases like Assistant Creation and Embedding Generation.
+The `ballerinax/openai` connector provides practical examples illustrating usage in various scenarios. Explore these examples, covering use cases like Assistant Creation and Embedding Generation.
 
 [//]: # (TODO: Add examples)
 1. [Assistant Generation](https://github.com/ballerina-platform/module-ballerinax-twitter/tree/main/examples/DM-mentions) - Build Assistants that can call models and use tools.
