@@ -6,7 +6,7 @@
 
 ## Overview
 
-OpenAI provides a suite of powerful AI models and services for natural language processing, code generation, image understanding, and more.
+[OpenAI](https://openai.com/) provides a suite of powerful AI models and services for natural language processing, code generation, image understanding, and more.
 
 The `ballerinax/openai` package offers APIs to easily connect and interact with OpenAI's RESTful API endpoints, enabling seamless integration with models such as GPT, Whisper, and DALL·E.
 
@@ -18,20 +18,30 @@ If you do not have an OpenAI account, you can sign up for one [here](https://pla
 ### Step 1: Create/Open an OpenAI Account
 - Visit the [OpenAI Platform](https://platform.openai.com/).
 - Sign in with your existing credentials, or create a new OpenAI account if you don’t already have one.
-
-### Step 2: Navigate to API Keys
+### Step 2: Create a Project
 - Once logged in, click on your profile icon in the top-right corner.
-- In the dropdown menu, click **"Your Profile"**, then navigate to the **"Projects"** section from the sidebar to create a new project. 
+- In the dropdown menu, click **"Your Profile"**. 
 
+    <img src="https://github.com/SankalpaFernando/module-ballerinax-openai/blob/main/docs/setup/resources/page_1.png?raw=true" alt="Openai Portal" style="width: 70%;">
 
-- Or directly visit: [https://platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+- Then navigate to the **"Projects"** section from the sidebar to create a new project.
 
-### Step 3: Generate an API Key
-- Click the **“+ Create new secret key”** button.
-- Provide a name for the key (e.g., "Connector Key") and confirm.
-- **Copy the generated API key** and store it securely.  
-  ⚠️ You will not be able to view it again later.
+   <img src="https://github.com/SankalpaFernando/module-ballerinax-openai/blob/main/docs/setup/resources/page_3.png?raw=true" alt="Project Dashbord" style="width: 70%;">
 
+- Click the **"Create Project"** button to create a new project.
+
+   <img src="https://github.com/SankalpaFernando/module-ballerinax-openai/blob/main/docs/setup/resources/page_2.png?raw=true" alt="Create a Project" style="width: 70%;">
+### Step 3: Navigate to API Keys
+- Navigate to the **"API Keys"** section from the sidebar and click the **“+ Create new secret key”** button. to create a new API Key.
+
+   <img src="https://github.com/SankalpaFernando/module-ballerinax-openai/blob/main/docs/setup/resources/page_4.png?raw=true" alt="API Key Dashboard" style="width: 70%;">
+
+- Provide a name for the key (e.g., "Connector Key") and select Project name  and then confirm.
+
+    <img src="https://github.com/SankalpaFernando/module-ballerinax-openai/blob/main/docs/setup/resources/page_5.png?raw=true" alt="API Key Generation" style="width: 70%;">
+- **Copy the generated API key** and store it securely.  ( ⚠️You will not be able to view it again later.)
+
+   <img src="https://github.com/SankalpaFernando/module-ballerinax-openai/blob/main/docs/setup/resources/page_6.png?raw=true" alt="Copy Key" style="width: 70%;">
 
 ## Quickstart
 To use the `OpenAI` connector in your Ballerina application, update the `.bal` file as follows:
