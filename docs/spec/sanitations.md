@@ -1,6 +1,6 @@
 _Author_:  @sankalpafernando \
 _Created_: 2025-06-17 \
-_Updated_: <!-- TODO: Add date --> \
+_Updated_: 2025-06-17 \
 _Edition_: Swan Lake
 
 # Sanitation for OpenAPI specification
@@ -171,6 +171,6 @@ OpenAPI requires all type values to be one of its predefined primitives.
 The following command was used to generate the Ballerina client from the OpenAPI specification. The command should be executed from the repository root directory.
 
 ```bash
-# TODO: Add OpenAPI CLI command used to generate the client
+bal openapi -i docs/spec/openapi.yaml --mode client --license docs/license.txt -o ballerina
 ```
 Note: The license year is hardcoded to 2025, change if necessary.

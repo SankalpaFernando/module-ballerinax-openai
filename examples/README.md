@@ -6,7 +6,9 @@ The `ballerinax/openai` connector provides practical examples illustrating usage
 1. [Assistant Generation](https://github.com/ballerina-platform/module-ballerinax-twitter/tree/main/examples/DM-mentions) - Build Assistants that can call models and use tools.
 2. [Embedding Generation](https://github.com/ballerina-platform/module-ballerinax-twitter/tree/main/examples/DM-mentions) - 
 Get a vector representation of a given input that can be easily consumed by machine learning models and algorithms.
+
 ## Prerequisites
+
 1. Generate OpenAI credentials to authenticate the connector as described in the [Setup guide](https://central.ballerina.io/ballerinax/openai/latest#setup-guide).
 
 2. For each example, create a `Config.toml` file the related configuration. Here's an example of how your `Config.toml` file should look:

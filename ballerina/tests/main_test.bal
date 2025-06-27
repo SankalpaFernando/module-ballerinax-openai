@@ -1,4 +1,4 @@
-// Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+// Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
 //
 // WSO2 LLC. licenses this file to you under the Apache License,
 // Version 2.0 (the "License"); you may not use this file except
@@ -14,7 +14,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/io;
 import ballerina/test;
 
 configurable string token = ?;
@@ -44,8 +43,14 @@ function testpostAssistant() returns error? {
         name: "Math Tutor",
         description: null,
         instructions: "You are a personal math tutor.",
-        tools: [{"type": "code_interpreter"}],
-        toolResources: {"code_interpreter": {"file_ids": []}},
+        tools: [
+            {
+                'type: "code_interpreter"
+            }
+        ],
+        toolResources: {
+            "code_interpreter": {"file_ids": []}
+        },
         metadata: {},
         topP: 1.0,
         temperature: 1.0,
@@ -157,7 +162,7 @@ function testpostThread() returns error? {
 }
 function testpostThreadAndRun() returns error? {
     CreateThreadAndRunRequest request = {
-        assistantId: assistantId,
+        assistantId,
         thread: {
             messages: [
                 {
@@ -222,7 +227,7 @@ function testpostAudioSpeech() returns error?{
         voice: "anna"
     };
     
-    byte[]|error response = check openai->/audio/speech.post(request, headers = headers);
+    byte[]|error response = check openai->/audio/speech.post(request);
 
     if response is byte[] {
         int responseLength = response.length();
@@ -328,13 +333,4 @@ function testdeleteThread() returns error? {
 function deleteResources() returns error? {
     check testdeleteAssistant();
     check testdeleteThread();
-}
-
-@test:BeforeSuite
-function setupResources() returns error? {
-    if islive {
-        io:println("Running live tests, ensure you have valid credentials and API access.");
-    } else {
-        io:println("Running mock tests, no actual API calls will be made.");
-    }
 }

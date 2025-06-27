@@ -263,14 +263,12 @@ http:Service mockService = service object {
         check caller->respond(responseData);
     }
 
-    resource function post threads/runs(http:Caller caller, http:Request req) returns error? {
+    resource function post threads/runs(http:Caller caller, http:Request req) returns RunObject|http:BadRequest|error?{
         json|error requestBody = req.getJsonPayload();
         if requestBody is error {
-            http:Response errorResponse = new;
-            errorResponse.statusCode = 400;
-            errorResponse.setJsonPayload({"error": "Invalid JSON payload"});
-            check caller->respond(errorResponse);
-            return;
+            return {
+                body:"Failed to Parse JSON"
+            };
         }
 
         string runId = "run_" + time:utcNow()[0].toString();
@@ -286,59 +284,75 @@ http:Service mockService = service object {
         lock {
             threads[threadId] = threadData;
         }
-        json responseData = {
-            "id": runId,
-            "object": "thread.run",
-            "created_at": getCurrentTimestamp(),
-            "assistant_id": assistantId,
-            "thread_id": threadId,
-            "status": "queued",
-            "model": check requestBody.model ?: "gpt-4o",
-            "instructions": check requestBody.instructions ?: "You are a personal math tutor.",
-            "tools": check requestBody.tools ?: [{"type": "code_interpreter"}],
-            "tool_resources": check requestBody.tool_resources ?: {"code_interpreter": {"file_ids": []}},
-            "metadata": check requestBody.metadata ?: {},
-            "top_p": check requestBody.top_p ?: 1.0,
-            "temperature": check requestBody.temperature ?: 1.0,
-            "max_prompt_tokens": check requestBody.max_prompt_tokens ?: 256,
-            "max_completion_tokens": check requestBody.max_completion_tokens ?: 128,
-            "response_format": check requestBody.response_format ?: "auto",
-            "tool_choice": check requestBody.tool_choice ?: "auto",
-            "truncation_strategy": check requestBody.truncation_strategy ?: {"last_messages": 10, "type": "auto"},
-            "parallel_tool_calls": check requestBody.parallel_tool_calls ?: false
+        RunObject responseData = {
+            id: runId,
+            'object: "thread.run",
+            createdAt: getCurrentTimestamp(),
+            assistantId: assistantId,
+            threadId: threadId,
+            status: "queued",
+            model: check requestBody.model ?: "gpt-4o",
+            instructions: check requestBody.instructions ?: "You are a personal math tutor.",
+            tools: check requestBody.tools ?: [{"type": "code_interpreter"}],
+            toolResources: check requestBody.tool_resources ?: {"code_interpreter": {"file_ids": []}},
+            metadata: check requestBody.metadata ?: {},
+            topP: check requestBody.top_p ?: 1.0,
+            temperature: check requestBody.temperature ?: 1.0,
+            maxPromptTokens: check requestBody.max_prompt_tokens ?: 256,
+            maxCompletionTokens: check requestBody.max_completion_tokens ?: 128,
+            responseFormat: check requestBody.response_format ?: "auto",
+            toolChoice: check requestBody.tool_choice ?: "auto",
+            truncationStrategy: check requestBody.truncation_strategy ?: {"last_messages": 10, "type": "auto"},
+            parallelToolCalls: check requestBody.parallel_tool_calls ?: false,
+            usage: {
+                promptTokens: 0,
+                completionTokens: 0,
+                totalTokens: 0,
+                completionTokensDetails: {
+                    acceptedPredictionTokens: 0,
+                    audioTokens: 0,
+                    reasoningTokens: 0,
+                    rejectedPredictionTokens: 0
+                },
+                promptTokensDetails: {
+                    audioTokens: 0,
+                    cachedTokens: 0
+                }
+            },
+            cancelledAt: 0,
+            completedAt: 0,
+            expiresAt: getCurrentTimestamp() + 3600,
+            failedAt: 0,
+            incompleteDetails:{
+                reason: "max_completion_tokens"
+            },
+            lastError: "",
+            requiredAction: "",
+            startedAt: 0,
         };
         lock {
             runs[runId] = responseData;
         }
-        check caller->respond(responseData);
+        return responseData;
     }
 
-    resource function post audio/speech(http:Caller caller, http:Request req) returns error? {
+    resource function post audio/speech(http:Caller caller, http:Request req) returns byte[]|http:BadRequest {
         json|error requestBody = req.getJsonPayload();
         if requestBody is error {
-            http:Response errorResponse = new;
-            errorResponse.statusCode = 400;
-            errorResponse.setJsonPayload({"error": "Invalid JSON payload"});
-            check caller->respond(errorResponse);
-            return;
+            return {
+                body:"Failed to Parse JSON"
+            };
         }
 
-        byte[] mockAudioData = "mock_mp3_data".toBytes();
-        http:Response response = new;
-        response.setHeader("Transfer-Encoding", "chunked");
-        response.setHeader("Content-Type", "application/octet-stream");
-        response.setBinaryPayload(mockAudioData);
-        check caller->respond(response);
+        return "mock_mp3_data".toBytes();
     }
 
-    resource function post chat/completions(http:Caller caller, http:Request req) returns error? {
+    resource function post chat/completions(http:Caller caller, http:Request req) returns CreateChatCompletionResponse|http:BadRequest|error? {
             json|error requestBody = req.getJsonPayload();
             if requestBody is error {
-                http:Response errorResponse = new;
-                errorResponse.statusCode = 400;
-                errorResponse.setJsonPayload({"error": "Invalid JSON payload"});
-                check caller->respond(errorResponse);
-                return;
+                return {
+                    body:"Failed to Parse JSON"
+                };
             }
 
             string model = check requestBody.model.ensureType(string);
@@ -351,90 +365,86 @@ http:Service mockService = service object {
                     break;
                 }
             }
-            json responseData = {
-                "id": completionId,
-                "object": "chat.completion",
-                "created": getCurrentTimestamp(),
-                "model": model,
-                "choices": [
+            return {
+                id: completionId,
+                'object: "chat.completion",
+                created: getCurrentTimestamp(),
+                model: model,
+                choices: [
                     {
-                        "index": 0,
-                        "message": {
-                            "role": "assistant",
-                            "content": "Assistant response: " + userContent
+                        index: 0,
+                        message: {
+                            role: "assistant",
+                            content: "Assistant response: " + userContent,
+                            refusal:"refused"
                         },
-                        "finish_reason": "stop"
+                        finishReason: "stop",
+                        logprobs: ()
                     }
                 ],
-                "usage": {
-                    "prompt_tokens": 10,
-                    "completion_tokens": 10,
-                    "total_tokens": 20
+                usage: {
+                    promptTokens: 10,
+                    completionTokens: 10,
+                    totalTokens: 20
                 }
             };
-            check caller->respond(responseData);
     }
 
-    resource function post completions(http:Caller caller, http:Request req) returns error?{
+    resource function post completions(http:Caller caller, http:Request req) returns CreateCompletionResponse|http:BadRequest|error?    {
         json|error requestBody = req.getJsonPayload();
         if requestBody is error {
-            http:Response errorResponse = new;
-            errorResponse.statusCode = 400;
-            errorResponse.setJsonPayload({"error": "Invalid JSON payload"});
-            check caller->respond(errorResponse);
-            return;
+                return{
+                    body:"Failed to Parse JSON"
+                };
         }
 
         string model = check requestBody.model.ensureType(string);
-        json responseData = {
+        return {
             id: "1",
             choices:[
                 {
-                    finish_reason: "stop",
+                    finishReason: "stop",
                     index: 0,
                     logprobs: {
-                        text_offset: [0],
-                        token_logprobs: [0],
+                        textOffset: [0],
+                        tokenLogprobs: [0],
                         tokens: ["string"],
-                        top_logprobs: []
+                        topLogprobs: []
                     },
                     text: "string"
                 }
             ],
-            created: time:monotonicNow(),
+            created: <int>time:monotonicNow(),
             model: model,
-            system_fingerprint: "string",
+            systemFingerprint: "string",
             usage: {
-                completion_tokens: 0,
-                prompt_tokens: 0,
-                total_tokens: 0,
-                completion_tokens_details: {
-                accepted_prediction_tokens: 0,
-                audio_tokens: 0,
-                reasoning_tokens: 0,
-                rejected_prediction_tokens: 0
+                completionTokens: 0,
+                promptTokens: 0,
+                totalTokens: 0,
+                completionTokensDetails: {
+                acceptedPredictionTokens: 0,
+                audioTokens: 0,
+                reasoningTokens: 0,
+                rejectedPredictionTokens: 0
                 },
-                prompt_tokens_details: {
-                audio_tokens: 0,
-                cached_tokens: 0
+                promptTokensDetails: {
+                audioTokens: 0,
+                cachedTokens: 0
                 }
             },
-            "object": "text_completion"
+            'object: "text_completion"
         };
-        check caller->respond(responseData);
     }
 
-    resource function post embeddings(http:Caller caller,http:Request req) returns  error?{
+    resource function post embeddings(http:Caller caller,http:Request req) returns CreateEmbeddingResponse|http:BadRequest|error?{
         json|error requestBody = req.getJsonPayload();
         if requestBody is error {
-                http:Response errorResponse = new;
-                errorResponse.statusCode = 400;
-                errorResponse.setJsonPayload({"error": "Invalid JSON payload"});
-                check caller->respond(errorResponse);
-                return;
+                return{
+                    body:"Failed to Parse JSON"
+                };
         }
 
-        json responseData = {
+        return {
             data: [
                 {
                     index:0,
@@ -447,11 +457,10 @@ http:Service mockService = service object {
             model:check requestBody.model,
             "object": "list",
             usage: {
-                prompt_tokens:0,
-                total_tokens:0
+                promptTokens:0,
+                totalTokens:0
             }
         };
-        check caller->respond(responseData);
     }
 
 };
