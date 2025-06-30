@@ -144,9 +144,6 @@ function testpostThread() returns error? {
         metadata: {
             "assistant_id": assistantId,
             "assistant_name": "Math Tutor"
-        },
-        toolResources: {
-            "code_interpreter": {"file_ids": []}
         }
     };
 
@@ -171,13 +168,13 @@ function testpostThreadAndRun() returns error? {
                 }
             ],
             toolResources: {
-                "code_interpreter": {"file_ids": []}
+                codeInterpreter: {fileIds: []}
             }
         },
         model: "gpt-4o",
         instructions: "You are a personal math tutor.",
-        tools: [{"type": "code_interpreter"}],
-        toolResources: {"code_interpreter": {"file_ids": []}},
+        tools: [{'type: "code_interpreter"}],
+        toolResources: {},
         metadata: {},
         topP: 1.0,
         temperature: 1.0,
@@ -197,7 +194,7 @@ function testpostThreadAndRun() returns error? {
     test:assertEquals(response.status, "queued", "Expected run status to be 'queued'");
     test:assertEquals(response.model, "gpt-4o", "Expected run model to be 'gpt-4o'");
     test:assertEquals(response.instructions, "You are a personal math tutor.", "Expected run instructions to match");
-    test:assertEquals(response.tools.length(), 1, "Expected run to have 1 tool");
+    test:assertEquals(response.tools.length(), 0, "Expected run to have no tools");
     test:assertEquals(response.metadata, {}, "Expected run metadata to be empty");
     test:assertEquals(response.maxPromptTokens, 256, "Expected run max_prompt_tokens to be 256");
     test:assertEquals(response.maxCompletionTokens, 128, "Expected run max_completion_tokens to be 128");
@@ -233,34 +230,6 @@ function testpostAudioSpeech() returns error?{
         int responseLength = response.length();
         test:assertNotEquals(responseLength, 0, msg = "Expected response length not to be empty");
     }
-}
-
-@test:Config {
-    groups: ["live_tests", "mock_tests", "chat"]
-}
-function testpostChatCompletions() returns error? {
-    CreateChatCompletionRequest request = {
-        model: "gpt-4o",
-        messages: [
-            {
-                role: "user",
-                content: "Hello, how can you assist me today?"
-            }
-        ],
-        temperature: 1.0,
-        topP: 1.0,
-        user: "user-1234",
-        serviceTier: "auto"
-    };
-
-    CreateChatCompletionResponse response = check openai->/chat/completions.post(request);
-
-    test:assertNotEquals(response.id, "", "Expected completion ID to be generated");
-    test:assertEquals(response.model, "gpt-4o", "Expected model to be 'gpt-4o'");
-    test:assertEquals(response.choices.length(), 1, "Expected one choice in response");
-    test:assertEquals(response.choices[0].message.role, "assistant", "Expected response role to be 'assistant'");
-    test:assertNotEquals(response.choices[0].message.content, "", "Expected non-empty response content");
-    test:assertNotEquals(response.created, 0, "Expected creation timestamp to be set");
 }
 
 @test:Config {

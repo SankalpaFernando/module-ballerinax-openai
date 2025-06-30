@@ -1,6 +1,6 @@
 [package]
-org = "wso2"
-name = "embedding_example"
+org = "sankalpaf"
+name = "marketing_image_generator"
 version = "0.1.0"
 distribution = "2201.12.7"
 
