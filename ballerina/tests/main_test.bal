@@ -75,11 +75,7 @@ function testpostAssistant() returns error? {
     groups: ["live_tests", "mock_tests", "assistants"]
 }
 isolated function testgetAssistants() returns error? {
-    ListAssistantsResponse|error response = openai->/assistants.get(headers = headers);
-
-    if response is error {
-        return error("Failed to list assistants: " + response.message());
-    }
+    ListAssistantsResponse response = check openai->/assistants.get(headers = headers);
 
     test:assertEquals(response.data.length(), 1, "Expected at least one assistant to be present");
     test:assertEquals(response.data[0].name, "Math Tutor", "Expected assistant name to be 'Math Tutor'");
@@ -150,6 +146,7 @@ function testpostThread() returns error? {
     ThreadObject response = check openai->/threads.post(request, headers = headers);
     test:assertNotEquals(response.id, "", "Expected thread ID to be generated");
     test:assertNotEquals(response.createdAt, 0, "Expected thread creation timestamp to be set");
+    
     threadId = response.id;
 };
 
@@ -224,19 +221,16 @@ function testpostAudioSpeech() returns error?{
         voice: "anna"
     };
     
-    byte[]|error response = check openai->/audio/speech.post(request);
+    byte[] response = check openai->/audio/speech.post(request);
 
-    if response is byte[] {
-        int responseLength = response.length();
-        test:assertNotEquals(responseLength, 0, msg = "Expected response length not to be empty");
-    }
+    int responseLength = response.length();
+    test:assertNotEquals(responseLength, 0, msg = "Expected response length not to be empty");
 }
 
 @test:Config {
     groups: ["live_tests", "mock_tests", "chat"]
 }
 function testpostCompletions() returns error?{
-
     string model = "davinci";
     CreateCompletionRequest request = {
         model,
@@ -277,23 +271,15 @@ function testpostembeddings() returns error?{
 }
 
 function testdeleteAssistant() returns error? {
-    DeleteAssistantResponse|error response = openai->/assistants/[assistantId].delete(headers = headers);
-
-    if response is error {
-        return error("Failed to delete assistant: " + response.message());
-    }
+    DeleteAssistantResponse response = check openai->/assistants/[assistantId].delete(headers = headers);
 
     test:assertEquals(response.deleted, true, "Expected assistant to be deleted successfully");
     test:assertEquals(response.id, assistantId, "Expected deleted assistant ID to match");
-
 }
 
 function testdeleteThread() returns error? {
-    DeleteThreadResponse|error response = openai->/threads/[threadId].delete(headers = headers);
+    DeleteThreadResponse response = check openai->/threads/[threadId].delete(headers = headers);
 
-    if response is error {
-        return error("Failed to delete thread: " + response.message());
-    }
     test:assertEquals(response.deleted, true, "Expected thread to be deleted successfully");
     test:assertEquals(response.id, threadId, "Expected deleted thread ID to match");
 }

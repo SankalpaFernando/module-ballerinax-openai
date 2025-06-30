@@ -31,6 +31,13 @@ isolated function getCurrentTimestamp() returns int {
 
 http:Service mockService = service object {
 
+    # Retrieve a list of assistants
+    #
+    # + req - The HTTP request object
+    # + return - returns can be any of following types
+    # http:Ok (The request has succeeded.)
+    # http:BadRequest (The request has invalid or missing OpenAI-Beta header.)
+    # error (An error occurred during processing.)
     resource function get assistants(http:Request req) returns ListAssistantsResponse|http:BadRequest|error? {
         string|http:HeaderNotFoundError betaHeader = req.getHeader("OpenAI-Beta");
         if betaHeader is http:HeaderNotFoundError || betaHeader != "assistants=v2" {
@@ -55,6 +62,14 @@ http:Service mockService = service object {
         return responseData;
     }
     
+    # Create a new assistant
+    #
+    # + requestBody - The payload containing assistant creation details
+    # + req - The HTTP request object
+    # + return - returns can be any of following types
+    # http:Ok (The request has succeeded.)
+    # http:BadRequest (The request has invalid or missing OpenAI-Beta header.)
+    # error (An error occurred during processing.)
     resource function post assistants(@http:Payload CreateAssistantRequest requestBody, http:Request req) returns AssistantObject|http:BadRequest|error? {
         string|http:HeaderNotFoundError betaHeader = req.getHeader("OpenAI-Beta");
         if betaHeader is http:HeaderNotFoundError || betaHeader != "assistants=v2" {
@@ -62,7 +77,7 @@ http:Service mockService = service object {
                 body: "Missing or invalid OpenAI-Beta header"
             };
         }
-        
+
         string assistantId = "asst_" + time:utcNow()[0].toString(); 
         AssistantObject responseData = {
             id: assistantId,
@@ -86,6 +101,15 @@ http:Service mockService = service object {
         }
         return responseData;
     }
+
+    # Retrieve an assistant by ID
+    #
+    # + assistantId - The ID of the assistant to retrieve
+    # + req - The HTTP request object
+    # + return - returns can be any of following types
+    # http:Ok (The request has succeeded.)
+    # http:BadRequest (The assistant is not found or the OpenAI-Beta header is invalid.)
+    # error (An error occurred during processing.)
     resource function get assistants/[string assistantId](http:Request req) returns AssistantObject|http:BadRequest|error? {
         string|http:HeaderNotFoundError betaHeader = req.getHeader("OpenAI-Beta");
         if betaHeader is http:HeaderNotFoundError || betaHeader != "assistants=v2" {
@@ -105,7 +129,16 @@ http:Service mockService = service object {
             body: "Assistant not found"
         };
     }
-    
+
+    # Update an existing assistant
+    #
+    # + assistantId - The ID of the assistant to update
+    # + requestBody - The payload containing updated assistant details
+    # + req - The HTTP request object
+    # + return - returns can be any of following types
+    # http:Ok (The request has succeeded.)
+    # http:BadRequest (The assistant is not found or the OpenAI-Beta header is invalid.)
+    # error (An error occurred during processing.)
     resource function post assistants/[string assistantId](@http:Payload CreateAssistantRequest requestBody, http:Request req) returns AssistantObject|http:BadRequest|error? {        
         string|http:HeaderNotFoundError betaHeader = req.getHeader("OpenAI-Beta");
         if betaHeader is http:HeaderNotFoundError || betaHeader != "assistants=v2" {
@@ -144,6 +177,14 @@ http:Service mockService = service object {
         };
     }
 
+    # Delete an assistant
+    #
+    # + assistantId - The ID of the assistant to delete
+    # + req - The HTTP request object
+    # + return - returns can be any of following types
+    # http:Ok (The request has succeeded.)
+    # http:BadRequest (The assistant is not found or the OpenAI-Beta header is invalid.)
+    # error (An error occurred during processing.)
     resource function delete assistants/[string assistantId](http:Request req) returns DeleteAssistantResponse|http:BadRequest|error? {
         string|http:HeaderNotFoundError betaHeader = req.getHeader("OpenAI-Beta");
         if betaHeader is http:HeaderNotFoundError || betaHeader != "assistants=v2" {
@@ -172,6 +213,14 @@ http:Service mockService = service object {
         };
     }
 
+    # Create a new thread
+    #
+    # + requestBody - The payload containing thread creation details
+    # + req - The HTTP request object
+    # + return - returns can be any of following types
+    # http:Ok (The request has succeeded.)
+    # http:BadRequest (The request is invalid.)
+    # error (An error occurred during processing.)
     resource function post threads(@http:Payload CreateThreadRequest requestBody, http:Request req) returns ThreadObject|http:BadRequest|error? {
         string threadId = "thread_" + time:utcNow()[0].toString();
 
@@ -188,6 +237,13 @@ http:Service mockService = service object {
         return responseData;
     }
 
+    # Retrieve a thread by ID
+    #
+    # + threadId - The ID of the thread to retrieve
+    # + return - returns can be any of following types
+    # http:Ok (The request has succeeded.)
+    # http:BadRequest (The thread is not found.)
+    # error (An error occurred during processing.)
     resource function get threads/[string threadId]() returns ThreadObject|http:BadRequest|error? {
         ThreadObject? thread;
         lock {
@@ -201,6 +257,12 @@ http:Service mockService = service object {
         };
     }
 
+    # Delete a thread
+    #
+    # + threadId - The ID of the thread to delete
+    # + return - returns can be any of following types
+    # http:Ok (The request has succeeded.)
+    # http:BadRequest (The thread is not found.)
     resource function delete threads/[string threadId]() returns DeleteThreadResponse|http:BadRequest {
         ThreadObject? thread;
         lock {
@@ -222,6 +284,14 @@ http:Service mockService = service object {
         };    
     }
 
+    # Create a thread and run
+    #
+    # + requestBody - The payload containing thread and run creation details
+    # + req - The HTTP request object
+    # + return - returns can be any of following types
+    # http:Ok (The request has succeeded.)
+    # http:BadRequest (The request is invalid.)
+    # error (An error occurred during processing.)
     resource function post threads/runs(@http:Payload CreateThreadAndRunRequest requestBody, http:Request req) returns RunObject|http:BadRequest|error{
         string runId = "run_" + time:utcNow()[0].toString();
         string threadId = "thread_" + time:utcNow()[0].toString();
@@ -282,10 +352,25 @@ http:Service mockService = service object {
         return responseData;
     }
 
+    # Generate speech audio
+    #
+    # + requestBody - The payload containing speech generation details
+    # + req - The HTTP request object
+    # + return - returns can be any of following types
+    # http:Ok (The request has succeeded.)
+    # http:BadRequest (The request is invalid.)
     resource function post audio/speech(@http:Payload CreateSpeechRequest requestBody, http:Request req) returns byte[]|http:BadRequest {
         return "mock_mp3_data".toBytes();
     }
-
+    
+    # Create a chat completion
+    #
+    # + requestBody - The payload containing chat completion details
+    # + req - The HTTP request object
+    # + return - returns can be any of following types
+    # http:Ok (The request has succeeded.)
+    # http:BadRequest (The request is invalid.)
+    # error (An error occurred during processing.)
     resource function post chat/completions(@http:Payload CreateChatCompletionRequest requestBody, http:Request req) returns CreateChatCompletionResponse|http:BadRequest|error? {
             string model = check requestBody.model.ensureType(string);
             string completionId = "chatcmpl_" + time:utcNow()[0].toString();
@@ -315,6 +400,14 @@ http:Service mockService = service object {
             };
     }
 
+    # Create a text completion
+    #
+    # + requestBody - The payload containing text completion details
+    # + req - The HTTP request object
+    # + return - returns can be any of following types
+    # http:Ok (The request has succeeded.)
+    # http:BadRequest (The request is invalid.)
+    # error (An error occurred during processing.)
     resource function post completions(@http:Payload CreateCompletionRequest requestBody, http:Request req) returns CreateCompletionResponse|http:BadRequest|error?    {
         string model = check requestBody.model.ensureType(string);
         return {
@@ -353,7 +446,15 @@ http:Service mockService = service object {
             'object: "text_completion"
         };
     }
-
+    
+    # Create embeddings
+    #
+    # + requestBody - The payload containing embedding creation details
+    # + req - The HTTP request object
+    # + return - returns can be any of following types
+    # http:Ok (The request has succeeded.)
+    # http:BadRequest (The request is invalid.)
+    # error (An error occurred during processing.)
     resource function post embeddings(@http:Payload CreateEmbeddingRequest requestBody,http:Request req) returns CreateEmbeddingResponse|http:BadRequest|error?{
         return {
             data: [
