@@ -77,8 +77,5 @@ public function main() returns error? {
         runStatus = check openaiClient->/threads/[thread.id]/runs/[run.id](headers=headers);
     }
 
-    // Retrieve messages from the thread
-    openai:ListMessagesResponse messages = check openaiClient->/threads/[thread.id]/messages(headers=headers);
-    openai:MessageObjectContent assistantReply = messages?.data[0]?.content[0];
-    io:println("Assistant's Budget Analysis and Advice:\n", assistantReply.toString());
+    io:println("Assistant Status: ", runStatus.status);
 }
