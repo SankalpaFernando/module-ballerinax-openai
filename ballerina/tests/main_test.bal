@@ -16,8 +16,8 @@
 
 import ballerina/test;
 
-configurable string token = ?;
-configurable boolean islive = ?;
+configurable string token = "default-token";
+configurable boolean islive = false;
 
 ConnectionConfig config = {
     auth: {token}
@@ -146,7 +146,7 @@ function testpostThread() returns error? {
     ThreadObject response = check openai->/threads.post(request, headers = headers);
     test:assertNotEquals(response.id, "", "Expected thread ID to be generated");
     test:assertNotEquals(response.createdAt, 0, "Expected thread creation timestamp to be set");
-    
+
     threadId = response.id;
 };
 
