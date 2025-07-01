@@ -154,7 +154,7 @@ function testPostThread() returns error? {
     dependsOn: [testPostThread],
     groups: ["live_tests", "mock_tests", "assistants"]
 }
-function testpostThreadAndRun() returns error? {
+function testPostThreadAndRun() returns error? {
     CreateThreadAndRunRequest request = {
         assistantId,
         thread: {
