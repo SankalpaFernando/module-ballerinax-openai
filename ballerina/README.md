@@ -97,7 +97,6 @@ public function main() returns error? {
    };
 
    openai:AssistantObject response = check openai->/assistants.post(request, headers = headers);
-
 }
 ```
 
