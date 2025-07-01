@@ -26,7 +26,9 @@ configurable map<string> headers = {
 public function main() returns error? {
     // Initialize OpenAI client
     final openai:Client openaiClient = check new ({
-        auth: {token}
+        auth: {
+            token
+        }
     });
 
     // Create Personal Finance Assistant
