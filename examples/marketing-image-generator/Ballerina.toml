@@ -1,5 +1,5 @@
 [package]
-org = "sankalpaf"
+org = "ws02"
 name = "marketing_image_generator"
 version = "0.1.0"
 distribution = "2201.12.7"

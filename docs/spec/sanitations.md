@@ -15,7 +15,7 @@ These changes are done in order to improve the overall usability, and as workaro
         `paths./organization/certificates/{certificate_id}`<br>
         Path parameter `certificate_id` is declared in the path but missing from operations `POST` and `DELETE`.
 
-    - **Fix**<br/>
+    - **Fix**
 Add the following to each of the affected operations (`post`, `delete`):
 
     ```yaml
@@ -28,28 +28,28 @@ Add the following to each of the affected operations (`post`, `delete`):
     ```
     
 
-    - **Reason**<br/>
+    - **Reason**
         All operations that use a path parameter must explicitly define it unless the parameter is moved to the shared path-level parameters object.
 2. **Invalid or Non-OpenAPI Keywords in Schemas**
     - **Affected Schema**: CompoundFilter 
-        - **Issue 1**<br/>
+        - **Issue 1**
             ```yaml
             $recursiveAnchor: true
             ```
 
-        - **Fix**<br/>
+        - **Fix**
             Remove the line containing `$recursiveAnchor`.
             <br>
-        - **Issue 2**<br/>
+        - **Issue 2**
            ```yaml
             oneOf:
              - ...
              - $recursiveRef: '#/components/schemas/CompoundFilter'
             ```
 
-        - **Fix**<br/>
+        - **Fix**
             Replace `$recursiveRef` with an OpenAPI-compatible $ref or restructure the schema to avoid recursion.
-    - **Reason**<br/>
+    - **Reason**
             OpenAPI 3.0 does not support JSON Schema Draft 2019 keywords like `$recursiveAnchor` and `$recursiveRef`.
 3. **Duplicate Items in required Arrays**
     - **Schema**: ContainerResource
@@ -63,10 +63,10 @@ Add the following to each of the affected operations (`post`, `delete`):
             - exampleField
         ```
 
-    - **Fix**<br/>
+    - **Fix**
 Remove the duplicate item from the array.
 
-    - **Reason**<br/>
+    - **Reason**
 `required` arrays must contain unique field names.
 4. **Empty or Invalid `required` Arrays**
     - **Affected Schemas**: 
@@ -86,10 +86,10 @@ Remove the duplicate item from the array.
             - exampleField
         ```
 
-    - **Fix**<br/>
+    - **Fix**
         - Add at least one valid field name if it’s required.
         - Or remove the required array if no fields are strictly required.
-    - **Reason**<br/>
+    - **Reason**
 Empty `required` arrays are invalid in OpenAPI 3.0. At least one property must be listed, or the array should be omitted.
 5. **Invalid Schema Properties (`optional`, `unevaluatedProperties`, `propertyNames`)**
     - **Affected Schemas & Properties**: 
@@ -102,14 +102,14 @@ Empty `required` arrays are invalid in OpenAPI 3.0. At least one property must b
         - `VectorStoreFileAttributes`
             - **Property**: `root`
             - **Invalid Keyword**: `propertyNames`
-    - **Fix**<br/>
+    - **Fix**
     Remove all invalid keywords from affected schema definitions.
-    - **Reason**<br/>
+    - **Reason**
 These keywords are not supported in OpenAPI 3.0. Their presence leads to schema validation failures.
 6. **Invalid Keywords Inside `items` Schema**
     - **Issue** <br>
     Contains `min_items`, `max_items` within `items`, which is not allowed.
-    - **Fix**<br/>
+    - **Fix**
 Move these constraints (minItems, maxItems) to the parent array definition
         ```yaml
         range:
@@ -119,7 +119,7 @@ Move these constraints (minItems, maxItems) to the parent array definition
         items:
             type: number
         ```
-    - **Reason**<br/>
+    - **Reason**
 `items` must define the schema of array elements, not constraints.
 6. **Invalid `anyOf.type` Values**
     - **Affected Schemas & Properties**
@@ -147,7 +147,7 @@ Move these constraints (minItems, maxItems) to the parent array definition
         Each contains a type value that is either null, empty, or not a valid primitive.
 
 
-    - **Fix**<br/>
+    - **Fix**
 Ensure that each `anyOf` uses only allowed OpenAPI primitive types:
 
         ```yaml
@@ -162,7 +162,7 @@ Ensure that each `anyOf` uses only allowed OpenAPI primitive types:
         - boolean
         - array
         - object
-    - **Reason**<br/>
+    - **Reason**
 OpenAPI requires all type values to be one of its predefined primitives.
 
 

@@ -24,6 +24,7 @@ import ballerina/mime;
 # The OpenAI REST API. Please see https://platform.openai.com/docs/api-reference for more details.
 public isolated client class Client {
     final http:Client clientEp;
+
     # Gets invoked to initialize the `connector`.
     #
     # + config - The configurations to be used when initializing the `connector` 
@@ -185,13 +186,13 @@ public isolated client class Client {
     # **Starting a new project?** We recommend trying [Responses](/docs/api-reference/responses) 
     # to take advantage of the latest OpenAI platform features. Compare
     # [Chat Completions with Responses](/docs/guides/responses-vs-chat-completions?api-mode=responses).
-    # 
+    #
     # ---
-    # 
+    #
     # Creates a model response for the given chat conversation. Learn more in the
     # [text generation](/docs/guides/text-generation), [vision](/docs/guides/vision),
     # and [audio](/docs/guides/audio) guides.
-    # 
+    #
     # Parameter support can differ depending on the model used to generate the
     # response, particularly for newer reasoning models. Parameters that are only
     # supported for reasoning models are noted below. For the current state of 
@@ -438,13 +439,13 @@ public isolated client class Client {
     }
 
     # Upload a file that can be used across various endpoints. Individual files can be up to 512 MB, and the size of all files uploaded by one organization can be up to 100 GB.
-    # 
+    #
     # The Assistants API supports files up to 2 million tokens and of specific file types. See the [Assistants Tools guide](/docs/assistants/tools) for details.
-    # 
+    #
     # The Fine-tuning API only supports `.jsonl` files. The input also has certain required formats for fine-tuning [chat](/docs/api-reference/fine-tuning/chat-input) or [completions](/docs/api-reference/fine-tuning/completions-input) models.
-    # 
+    #
     # The Batch API only supports `.jsonl` files up to 200 MB in size. The input also has a specific required [format](/docs/api-reference/batch/request-input).
-    # 
+    #
     # Please [contact us](https://help.openai.com/) if you need to increase these storage limits.
     #
     # + headers - Headers to be sent with the request 
@@ -488,7 +489,7 @@ public isolated client class Client {
     }
 
     # **NOTE:** This endpoint requires an [admin API key](../admin-api-keys).
-    # 
+    #
     # Organization owners can use this endpoint to view all permissions for a fine-tuned model checkpoint.
     #
     # + fineTunedModelCheckpoint - The ID of the fine-tuned model checkpoint to get permissions for
@@ -502,7 +503,7 @@ public isolated client class Client {
     }
 
     # **NOTE:** Calling this endpoint requires an [admin API key](../admin-api-keys).
-    # 
+    #
     # This enables organization owners to share fine-tuned models with other projects in their organization.
     #
     # + fineTunedModelCheckpoint - The ID of the fine-tuned model checkpoint to create a permission for
@@ -517,7 +518,7 @@ public isolated client class Client {
     }
 
     # **NOTE:** This endpoint requires an [admin API key](../admin-api-keys).
-    # 
+    #
     # Organization owners can use this endpoint to delete a permission for a fine-tuned model checkpoint.
     #
     # + fineTunedModelCheckpoint - The ID of the fine-tuned model checkpoint to delete a permission for
@@ -541,9 +542,9 @@ public isolated client class Client {
     }
 
     # Creates a fine-tuning job which begins the process of creating a new model from a given dataset.
-    # 
+    #
     # Response includes details of the enqueued job including job status and the name of the fine-tuned models once complete.
-    # 
+    #
     # [Learn more about fine-tuning](/docs/guides/fine-tuning)
     #
     # + headers - Headers to be sent with the request 
@@ -557,7 +558,7 @@ public isolated client class Client {
     }
 
     # Get info about a fine-tuning job.
-    # 
+    #
     # [Learn more about fine-tuning](/docs/guides/fine-tuning)
     #
     # + fineTuningJobId - The ID of the fine-tuning job
@@ -746,7 +747,7 @@ public isolated client class Client {
     }
 
     # Upload a certificate to the organization. This does **not** automatically activate the certificate.
-    # 
+    #
     # Organizations can upload up to 50 certificates.
     #
     # + headers - Headers to be sent with the request 
@@ -761,7 +762,7 @@ public isolated client class Client {
     }
 
     # Activate certificates at the organization level.
-    # 
+    #
     # You can atomically and idempotently activate up to 10 certificates at a time.
     #
     # + headers - Headers to be sent with the request 
@@ -776,7 +777,7 @@ public isolated client class Client {
     }
 
     # Deactivate certificates at the organization level.
-    # 
+    #
     # You can atomically and idempotently deactivate up to 10 certificates at a time.
     #
     # + headers - Headers to be sent with the request 
@@ -791,7 +792,7 @@ public isolated client class Client {
     }
 
     # Get a certificate that has been uploaded to the organization.
-    # 
+    #
     # You can get a certificate regardless of whether it is active or not.
     #
     # + certificateId - Unique ID of the certificate to retrieve
@@ -819,7 +820,7 @@ public isolated client class Client {
     }
 
     # Delete a certificate from the organization.
-    # 
+    #
     # The certificate must be inactive for the organization and all projects.
     #
     # + headers - Headers to be sent with the request 
@@ -990,7 +991,7 @@ public isolated client class Client {
     }
 
     # Activate certificates at the project level.
-    # 
+    #
     # You can atomically and idempotently activate up to 10 certificates at a time.
     #
     # + headers - Headers to be sent with the request 
@@ -1005,7 +1006,7 @@ public isolated client class Client {
     }
 
     # Deactivate certificates at the project level.
-    # 
+    #
     # You can atomically and idempotently deactivate up to 10 certificates at a time.
     #
     # + headers - Headers to be sent with the request 
@@ -1302,7 +1303,7 @@ public isolated client class Client {
     # Create an ephemeral API token for use in client-side applications with the
     # Realtime API. Can be configured with the same session parameters as the
     # `session.update` client event.
-    # 
+    #
     # It responds with a session object, plus a `client_secret` key which contains
     # a usable ephemeral API token that can be used to authenticate browser clients
     # for the Realtime API.
@@ -1321,7 +1322,7 @@ public isolated client class Client {
     # Create an ephemeral API token for use in client-side applications with the
     # Realtime API specifically for realtime transcriptions. 
     # Can be configured with the same session parameters as the `transcription_session.update` client event.
-    # 
+    #
     # It responds with a session object, plus a `client_secret` key which contains
     # a usable ephemeral API token that can be used to authenticate browser clients
     # for the Realtime API.
@@ -1621,16 +1622,16 @@ public isolated client class Client {
     # that you can add [Parts](/docs/api-reference/uploads/part-object) to.
     # Currently, an Upload can accept at most 8 GB in total and expires after an
     # hour after you create it.
-    # 
+    #
     # Once you complete the Upload, we will create a
     # [File](/docs/api-reference/files/object) object that contains all the parts
     # you uploaded. This File is usable in the rest of our platform as a regular
     # File object.
-    # 
+    #
     # For certain `purpose` values, the correct `mime_type` must be specified. 
     # Please refer to documentation for the 
     # [supported MIME types for your use case](/docs/assistants/tools/file-search#supported-files).
-    # 
+    #
     # For guidance on the proper filename extensions for each purpose, please
     # follow the documentation on [creating a
     # File](/docs/api-reference/files/create).
@@ -1657,11 +1658,11 @@ public isolated client class Client {
     }
 
     # Completes the [Upload](/docs/api-reference/uploads/object). 
-    # 
+    #
     # Within the returned Upload object, there is a nested [File](/docs/api-reference/files/object) object that is ready to use in the rest of the platform.
-    # 
+    #
     # You can specify the order of the Parts by passing in an ordered list of the Part IDs.
-    # 
+    #
     # The number of bytes uploaded upon completion must match the number of bytes initially specified when creating the Upload object. No Parts may be added after an Upload is completed.
     #
     # + uploadId - The ID of the Upload
@@ -1676,9 +1677,9 @@ public isolated client class Client {
     }
 
     # Adds a [Part](/docs/api-reference/uploads/part-object) to an [Upload](/docs/api-reference/uploads/object) object. A Part represents a chunk of bytes from the file you are trying to upload. 
-    # 
+    #
     # Each Part can be at most 64 MB, and you can add Parts until you hit the Upload maximum of 8 GB.
-    # 
+    #
     # It is possible to add multiple Parts in parallel. You can decide the intended order of the Parts when you [complete the Upload](/docs/api-reference/uploads/complete).
     #
     # + uploadId - The ID of the Upload

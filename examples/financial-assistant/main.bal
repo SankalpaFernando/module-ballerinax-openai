@@ -15,8 +15,8 @@
 // under the License.
 
 import ballerina/io;
-import ballerinax/openai;
 import ballerina/lang.runtime;
+import ballerinax/openai;
 
 configurable string token = ?;
 configurable map<string> headers = {
@@ -43,7 +43,7 @@ public function main() returns error? {
         responseFormat: {"type": "text"}
     };
 
-    openai:AssistantObject assistantResponse = check openaiClient->/assistants.post(request, headers=headers);
+    openai:AssistantObject assistantResponse = check openaiClient->/assistants.post(request, headers = headers);
     io:println("Personal Finance Assistant Created -> ID: ", assistantResponse.id, "\n");
 
     // Get user input for budget
@@ -51,7 +51,7 @@ public function main() returns error? {
     float income = check float:fromString(io:readln().trim());
     io:println("Enter your monthly expenses (comma-separated, e.g., 500,200,300): ");
     string[] expenseInputs = re `,`.split(io:readln().trim());
-    float[] expenses =  expenseInputs.map(s => check float:fromString(s.trim()));
+    float[] expenses = expenseInputs.map(s => check float:fromString(s.trim()));
 
     openai:CreateThreadRequest threadRequest = {
         messages: [
@@ -61,20 +61,20 @@ public function main() returns error? {
             }
         ]
     };
-    openai:ThreadObject thread = check openaiClient->/threads.post(threadRequest, headers=headers);
+    openai:ThreadObject thread = check openaiClient->/threads.post(threadRequest, headers = headers);
 
     openai:CreateRunRequest runRequest = {
-        assistantId:assistantResponse.id,
+        assistantId: assistantResponse.id,
         instructions: "Provide a detailed budget analysis and financial advice based on the user's input."
     };
-    openai:RunObject run = check openaiClient->/threads/[thread.id]/runs.post(runRequest, headers=headers);
+    openai:RunObject run = check openaiClient->/threads/[thread.id]/runs.post(runRequest, headers = headers);
 
     // Poll for run completion
-    openai:RunObject runStatus = check openaiClient->/threads/[thread.id]/runs/[run.id](headers=headers);
+    openai:RunObject runStatus = check openaiClient->/threads/[thread.id]/runs/[run.id](headers = headers);
     while runStatus.status != "completed" {
         // Wait for 1 second before polling again
         runtime:sleep(1);
-        runStatus = check openaiClient->/threads/[thread.id]/runs/[run.id](headers=headers);
+        runStatus = check openaiClient->/threads/[thread.id]/runs/[run.id](headers = headers);
     }
 
     io:println("Assistant Status: ", runStatus.status);

@@ -211,16 +211,16 @@ function testgetThreadById() returns error? {
 @test:Config {
     groups: ["live_tests", "mock_tests", "audio"]
 }
-function testpostAudioSpeech() returns error?{
+function testpostAudioSpeech() returns error? {
     CreateSpeechRequest request = {
         input: "Hello, how are you?",
         instructions: "You're a good assistant",
-        responseFormat:"mp3",
-        speed:1,
-        model:"tts-1",
+        responseFormat: "mp3",
+        speed: 1,
+        model: "tts-1",
         voice: "anna"
     };
-    
+
     byte[] response = check openai->/audio/speech.post(request);
 
     int responseLength = response.length();
@@ -230,7 +230,7 @@ function testpostAudioSpeech() returns error?{
 @test:Config {
     groups: ["live_tests", "mock_tests", "chat"]
 }
-function testpostCompletions() returns error?{
+function testpostCompletions() returns error? {
     string model = "davinci";
     CreateCompletionRequest request = {
         model,
@@ -243,17 +243,17 @@ function testpostCompletions() returns error?{
 
     CreateCompletionResponse response = check openai->/completions.post(request);
 
-    test:assertEquals(response.model,model,"Expected model to be " + model);
-    test:assertEquals(response.choices.length(),1,"Expected one choice in response");
-    test:assertNotEquals(response.choices[0].text,"","Expected non-empty response content");
-    test:assertNotEquals(response.usage,"","Expected usage to be set");
-    test:assertNotEquals(response.created,0,"Expected creation timestamp to be set");
+    test:assertEquals(response.model, model, "Expected model to be " + model);
+    test:assertEquals(response.choices.length(), 1, "Expected one choice in response");
+    test:assertNotEquals(response.choices[0].text, "", "Expected non-empty response content");
+    test:assertNotEquals(response.usage, "", "Expected usage to be set");
+    test:assertNotEquals(response.created, 0, "Expected creation timestamp to be set");
 }
 
-@test:Config{
+@test:Config {
     groups: ["live_tests", "mock_tests", "embeddings"]
 }
-function testpostembeddings() returns error?{
+function testpostembeddings() returns error? {
     string model = "text-embedding-3-small";
     CreateEmbeddingRequest request = {
         input: "The quick brown fox jumped over the lazy dog",
@@ -265,9 +265,9 @@ function testpostembeddings() returns error?{
 
     CreateEmbeddingResponse response = check openai->/embeddings.post(request);
 
-    test:assertEquals(response.model,model,"Expected model to be "+model);
-    test:assertNotEquals(response.usage,"","Expected usage to be set");
-    test:assertNotEquals(response.data.length(),0,"Expected data to be set");
+    test:assertEquals(response.model, model, "Expected model to be " + model);
+    test:assertNotEquals(response.usage, "", "Expected usage to be set");
+    test:assertNotEquals(response.data.length(), 0, "Expected data to be set");
 }
 
 function testdeleteAssistant() returns error? {

@@ -106,7 +106,7 @@ public type ResponseError record {
 
 public type CreateResponseAllOf3 record {
     # Text, image, or file inputs to the model, used to generate a response.
-    # 
+    #
     # Learn more:
     # - [Text inputs and outputs](/docs/guides/text)
     # - [Image inputs](/docs/guides/images)
@@ -117,7 +117,7 @@ public type CreateResponseAllOf3 record {
     # Specify additional output data to include in the model response. Currently
     # supported values are:
     # - `file_search_call.results`: Include the search results of
-    #   the file search tool call.
+    # the file search tool call.
     # - `message.input_image.image_url`: Include image urls from the input message.
     # - `computer_call_output.output.image_url`: Include image urls from the computer call output
     Includable[]? include?;
@@ -150,11 +150,11 @@ public type ComputerToolCallSafetyCheck record {
 };
 
 # Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
-# 
+#
 # Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
-# 
+#
 # Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
-# 
+#
 # **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length
 public type AssistantsApiResponseFormatOption AssistantsApiResponseFormatOptionOneOf1|ResponseFormatText|ResponseFormatJsonObject|ResponseFormatJsonSchema;
 
@@ -179,7 +179,7 @@ public type InviteProjects record {
 
 public type ResponseProperties record {
     # Inserts a system (or developer) message as the first item in the model's context.
-    # 
+    #
     # When using along with `previous_response_id`, the instructions from a previous
     # response will not be carried over to the next response. This makes it simple
     # to swap out system (or developer) messages in new responses
@@ -190,7 +190,7 @@ public type ResponseProperties record {
     @jsondata:Name {value: "previous_response_id"}
     string? previousResponseId?;
     # **o-series models only**
-    # 
+    #
     # Configuration options for 
     # [reasoning models](https://platform.openai.com/docs/guides/reasoning)
     Reasoning reasoning?;
@@ -207,24 +207,24 @@ public type ResponseProperties record {
     ResponsePropertiesText text?;
     # An array of tools the model may call while generating a response. You 
     # can specify which tool to use by setting the `tool_choice` parameter.
-    # 
+    #
     # The two categories of tools you can provide the model are:
-    # 
+    #
     # - **Built-in tools**: Tools that are provided by OpenAI that extend the
-    #   model's capabilities, like [web search](/docs/guides/tools-web-search)
-    #   or [file search](/docs/guides/tools-file-search). Learn more about
-    #   [built-in tools](/docs/guides/tools).
+    # model's capabilities, like [web search](/docs/guides/tools-web-search)
+    # or [file search](/docs/guides/tools-file-search). Learn more about
+    # [built-in tools](/docs/guides/tools).
     # - **Function calls (custom tools)**: Functions that are defined by you,
-    #   enabling the model to call your own code. Learn more about
-    #   [function calling](/docs/guides/function-calling)
+    # enabling the model to call your own code. Learn more about
+    # [function calling](/docs/guides/function-calling)
     Tool[] tools?;
     # The truncation strategy to use for the model response.
     # - `auto`: If the context of this response and previous ones exceeds
-    #   the model's context window size, the model will truncate the 
-    #   response to fit the context window by dropping input items in the
-    #   middle of the conversation. 
+    # the model's context window size, the model will truncate the 
+    # response to fit the context window by dropping input items in the
+    # middle of the conversation. 
     # - `disabled` (default): If a model response will exceed the context window 
-    #   size for a model, the request will fail with a 400 error
+    # size for a model, the request will fail with a 400 error
     "auto"|"disabled"? truncation = "disabled";
     # An upper bound for the number of tokens that can be generated for a response, including visible output tokens and [reasoning tokens](/docs/guides/reasoning)
     @jsondata:Name {value: "max_output_tokens"}
@@ -403,11 +403,11 @@ public type CreateUploadRequest record {|
     # The name of the file to upload
     string filename;
     # The intended purpose of the uploaded file.
-    # 
+    #
     # See the [documentation on File purposes](/docs/api-reference/files/create#files-create-purpose)
     "assistants"|"batch"|"fine-tune"|"vision" purpose;
     # The MIME type of the file.
-    # 
+    #
     # This must fall within the supported MIME types for your file purpose. See the supported MIME types for assistants and vision
     @jsondata:Name {value: "mime_type"}
     string mimeType;
@@ -444,7 +444,7 @@ public type EvalStoredCompletionsDataSourceConfig record {
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata?;
@@ -468,7 +468,7 @@ public type ModifyThreadRequest record {|
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata?;
@@ -736,7 +736,7 @@ public type VectorStoreObject record {
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata;
@@ -795,7 +795,7 @@ public type CreateCompletionResponse record {
     # The list of completion choices the model generated for the input prompt
     CreateCompletionResponseChoices[] choices;
     # This fingerprint represents the backend configuration that the model runs with.
-    # 
+    #
     # Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism
     @jsondata:Name {value: "system_fingerprint"}
     string systemFingerprint?;
@@ -1068,13 +1068,13 @@ public type RunStepCompletionUsage record {
 
 # Output types that you would like the model to generate.
 # Most models are capable of generating text, which is the default:
-# 
+#
 # `["text"]`
-# 
+#
 # The `gpt-4o-audio-preview` model can also be used to 
 # [generate audio](/docs/guides/audio). To request that this model generate 
 # both text and audio responses, you can use:
-# 
+#
 # `["text", "audio"]`
 public type ResponseModalities ("text"|"audio")[]?;
 
@@ -1210,7 +1210,7 @@ public type CreateTranscriptionRequest record {|
     # as it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format). 
     # See the [Streaming section of the Speech-to-Text guide](/docs/guides/speech-to-text?lang=curl#streaming-transcriptions)
     # for more information.
-    # 
+    #
     # Note: Streaming is not supported for the `whisper-1` model and will be ignored
     boolean? 'stream = false;
     # The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit
@@ -1271,14 +1271,14 @@ public type ListBatchesResponse record {
 # An Eval object with a data source config and testing criteria.
 # An Eval represents a task to be done for your LLM integration.
 # Like:
-#  - Improve the quality of my chatbot
-#  - See how well my chatbot handles customer support
-#  - Check if o3-mini is better at my usecase than gpt-4o
+# - Improve the quality of my chatbot
+# - See how well my chatbot handles customer support
+# - Check if o3-mini is better at my usecase than gpt-4o
 public type Eval record {
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata;
@@ -1311,12 +1311,12 @@ public type CreateEmbeddingResponse record {
 };
 
 # Controls which (if any) tool is called by the model.
-# 
+#
 # `none` means the model will not call any tool and instead generates a message.
-# 
+#
 # `auto` means the model can pick between generating a message or calling one or
 # more tools.
-# 
+#
 # `required` means the model must call one or more tools
 public type ToolChoiceOptions "none"|"auto"|"required";
 
@@ -1379,7 +1379,7 @@ public type ModifyMessageRequest record {|
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata?;
@@ -1394,7 +1394,7 @@ public type AuditLogApiKeycreated record {
 };
 
 # The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format. 
-# 
+#
 # Omitting `parameters` defines a function with an empty parameter list
 public type FunctionParameters record {
 };
@@ -1543,7 +1543,7 @@ public type Batch record {
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata?;
@@ -1625,7 +1625,7 @@ public type EvalRun record {
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata;
@@ -1667,7 +1667,7 @@ public type GetCertificateQueries record {
 };
 
 # Not supported with latest reasoning models `o3` and `o4-mini`.
-# 
+#
 # Up to 4 sequences where the API will stop generating further tokens. The
 # returned text will not contain the stop sequence
 public type StopConfiguration StopConfigurationOneOf1|StopConfigurationStopConfigurationOneOf12??;
@@ -1758,14 +1758,14 @@ public type ModelResponseProperties record {
     # where the model considers the results of the tokens with top_p probability
     # mass. So 0.1 means only the tokens comprising the top 10% probability mass
     # are considered.
-    # 
+    #
     # We generally recommend altering this or `temperature` but not both
     @jsondata:Name {value: "top_p"}
     decimal? topP = 1;
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata?;
@@ -1802,7 +1802,7 @@ public type MessageObject record {
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata;
@@ -1881,7 +1881,7 @@ public type EvalStoredCompletionsSource record {
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata?;
@@ -1954,7 +1954,7 @@ public type FineTuneSupervisedMethodHyperparameters record {
 
 # The hyperparameters used for the fine-tuning job.
 # This value is now deprecated in favor of `method`, and should be passed in under the `method` parameter
-# 
+#
 # # Deprecated
 @deprecated
 public type CreateFineTuningJobRequestHyperparameters record {
@@ -2078,7 +2078,7 @@ public type ChatCompletionFunctions record {
     # A description of what the function does, used by the model to choose when and how to call the function
     string description?;
     # The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format. 
-    # 
+    #
     # Omitting `parameters` defines a function with an empty parameter list
     FunctionParameters parameters?;
 };
@@ -2157,14 +2157,14 @@ public type BatchesBody record {
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata?;
     # The ID of an uploaded file that contains requests for the new batch.
-    # 
+    #
     # See [upload file](/docs/api-reference/files/create) for how to upload a file.
-    # 
+    #
     # Your input file must be formatted as a [JSONL file](/docs/api-reference/batch/request-input), and must be uploaded with the purpose `batch`. The file can contain up to 50,000 requests, and can be up to 200 MB in size
     @jsondata:Name {value: "input_file_id"}
     string inputFileId;
@@ -2232,7 +2232,7 @@ public type CreateThreadRequest record {|
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata?;
@@ -2369,7 +2369,7 @@ public type RunCompletionUsage record {
 };
 
 # Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model
-# 
+#
 # # Deprecated
 @deprecated
 public type ChatCompletionResponseMessageFunctionCall record {
@@ -2494,7 +2494,7 @@ public type FileSearchToolCallResults record {
 # Represents the Queries record for the operation: listChatCompletions
 public type ListChatCompletionsQueries record {
     # A list of metadata keys to filter the Chat Completions by. Example:
-    # 
+    #
     # `metadata[key1]=value1&metadata[key2]=value2`
     Metadata? metadata?;
     # Number of Chat Completions to retrieve
@@ -2529,7 +2529,7 @@ public type Drag record {
 };
 
 # **o-series models only**
-# 
+#
 # Configuration options for 
 # [reasoning models](https://platform.openai.com/docs/guides/reasoning)
 public type Reasoning record {
@@ -2538,7 +2538,7 @@ public type Reasoning record {
     # One of `auto`, `concise`, or `detailed`
     "auto"|"concise"|"detailed"? summary?;
     # **o-series models only** 
-    # 
+    #
     # Constrains effort on reasoning for 
     # [reasoning models](https://platform.openai.com/docs/guides/reasoning).
     # Currently supported values are `low`, `medium`, and `high`. Reducing
@@ -2546,11 +2546,11 @@ public type Reasoning record {
     # on reasoning in a response
     ReasoningEffort? effort?;
     # **Deprecated:** use `summary` instead.
-    # 
+    #
     # A summary of the reasoning performed by the model. This can be
     # useful for debugging and understanding the model's reasoning process.
     # One of `auto`, `concise`, or `detailed`
-    # 
+    #
     # # Deprecated
     @jsondata:Name {value: "generate_summary"}
     @deprecated
@@ -2603,13 +2603,13 @@ public type UserListResponse record {
 
 public type ResponseAllOf3 record {
     # An array of content items generated by the model.
-    # 
+    #
     # - The length and order of items in the `output` array is dependent
-    #   on the model's response.
+    # on the model's response.
     # - Rather than accessing the first item in the `output` array and 
-    #   assuming it's an `assistant` message with the content generated by
-    #   the model, you might consider using the `output_text` property where
-    #   supported in SDKs
+    # assuming it's an `assistant` message with the content generated by
+    # the model, you might consider using the `output_text` property where
+    # supported in SDKs
     OutputItem[] output;
     # Whether to allow the model to run tool calls in parallel
     @jsondata:Name {value: "parallel_tool_calls"}
@@ -2684,7 +2684,7 @@ public type CreateChatCompletionRequestAllOf2 record {
     @jsondata:Name {value: "top_logprobs"}
     int? topLogprobs?;
     # Modify the likelihood of specified tokens appearing in the completion.
-    # 
+    #
     # Accepts a JSON object that maps tokens (specified by their token ID in the
     # tokenizer) to an associated bias value from -100 to 100. Mathematically,
     # the bias is added to the logits generated by the model prior to sampling.
@@ -2698,29 +2698,29 @@ public type CreateChatCompletionRequestAllOf2 record {
     # Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend
     int? seed?;
     # Deprecated in favor of `tools`.
-    # 
+    #
     # A list of functions the model may generate JSON inputs for
-    # 
+    #
     # # Deprecated
     @constraint:Array {maxLength: 128, minLength: 1}
     @deprecated
     ChatCompletionFunctions[] functions?;
     # Deprecated in favor of `tool_choice`.
-    # 
+    #
     # Controls which (if any) function is called by the model.
-    # 
+    #
     # `none` means the model will not call a function and instead generates a
     # message.
-    # 
+    #
     # `auto` means the model can pick between generating a message or calling a
     # function.
-    # 
+    #
     # Specifying a particular function via `{"name": "my_function"}` forces the
     # model to call that function.
-    # 
+    #
     # `none` is the default when no functions are present. `auto` is the default
     # if functions are present
-    # 
+    #
     # # Deprecated
     @jsondata:Name {value: "function_call"}
     @deprecated
@@ -2743,13 +2743,13 @@ public type CreateChatCompletionRequestAllOf2 record {
     int? maxCompletionTokens?;
     # Output types that you would like the model to generate.
     # Most models are capable of generating text, which is the default:
-    # 
+    #
     # `["text"]`
-    # 
+    #
     # The `gpt-4o-audio-preview` model can also be used to 
     # [generate audio](/docs/guides/audio). To request that this model generate 
     # both text and audio responses, you can use:
-    # 
+    #
     # `["text", "audio"]`
     ResponseModalities? modalities?;
     # Number between -2.0 and 2.0. Positive values penalize new tokens based on
@@ -2758,12 +2758,12 @@ public type CreateChatCompletionRequestAllOf2 record {
     @jsondata:Name {value: "frequency_penalty"}
     decimal? frequencyPenalty = 0;
     # An object specifying the format that the model must output.
-    # 
+    #
     # Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
     # Structured Outputs which ensures the model will match your supplied JSON
     # schema. Learn more in the [Structured Outputs
     # guide](/docs/guides/structured-outputs).
-    # 
+    #
     # Setting to `{ "type": "json_object" }` enables the older JSON mode, which
     # ensures the message the model generates is valid JSON. Using `json_schema`
     # is preferred for models that support it
@@ -2784,10 +2784,10 @@ public type CreateChatCompletionRequestAllOf2 record {
     # The maximum number of [tokens](/tokenizer) that can be generated in the
     # chat completion. This value can be used to control
     # [costs](https://openai.com/api/pricing/) for text generated via API.
-    # 
+    #
     # This value is now deprecated in favor of `max_completion_tokens`, and is
     # not compatible with [o-series models](/docs/guides/reasoning)
-    # 
+    #
     # # Deprecated
     @jsondata:Name {value: "max_tokens"}
     @deprecated
@@ -2799,7 +2799,7 @@ public type CreateChatCompletionRequestAllOf2 record {
     # How many chat completion choices to generate for each input message. Note that you will be charged based on the number of generated tokens across all of the choices. Keep `n` as `1` to minimize costs
     int? n = 1;
     # Not supported with latest reasoning models `o3` and `o4-mini`.
-    # 
+    #
     # Up to 4 sequences where the API will stop generating further tokens. The
     # returned text will not contain the stop sequence
     StopConfiguration? stop?;
@@ -2837,7 +2837,7 @@ public type CreateEvalCompletionsRunDataSourceSamplingParams record {
 public type RealtimeSessionCreateRequest record {
     VoiceIdsShared voice?;
     # The default system instructions (i.e. system message) prepended to model  calls. This field allows the client to guide the model on desired  responses. The model can be instructed on response content and format,  (e.g. "be extremely succinct", "act friendly", "here are examples of good  responses") and on audio behavior (e.g. "talk quickly", "inject emotion  into your voice", "laugh frequently"). The instructions are not guaranteed  to be followed by the model, but they provide guidance to the model on the desired behavior.
-    # 
+    #
     # Note that the server sets default instructions which will be used if this  field is not set and are visible in the `session.created` event at the  start of the session
     string instructions?;
     # The format of input audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
@@ -2880,7 +2880,7 @@ public type ModifyAssistantRequest record {|
     @jsondata:Name {value: "reasoning_effort"}
     ReasoningEffort? reasoningEffort?;
     # An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
-    # 
+    #
     # We generally recommend altering this or temperature but not both
     @jsondata:Name {value: "top_p"}
     decimal? topP = 1;
@@ -2891,7 +2891,7 @@ public type ModifyAssistantRequest record {|
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata?;
@@ -3016,7 +3016,7 @@ public type CreateEvalRunRequest record {
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata?;
@@ -3084,7 +3084,7 @@ public type ModifyRunRequest record {|
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata?;
@@ -3183,7 +3183,7 @@ public type CreateMessageRequest record {|
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata?;
@@ -3223,7 +3223,7 @@ public type RunStepObject record {
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata;
@@ -3357,7 +3357,7 @@ public type FunctionToolCall record {
 # Represents the Queries record for the operation: getRunStep
 public type GetRunStepQueries record {
     # A list of additional fields to include in the response. Currently the only supported value is `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result content.
-    # 
+    #
     # See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information
     @http:Query {name: "include[]"}
     ("step_details.tool_calls[*].file_search.results[*].content")[] include?;
@@ -3457,7 +3457,7 @@ public type CompletionUsagePromptTokensDetails record {
 };
 
 # Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model
-# 
+#
 # # Deprecated
 @deprecated
 public type ChatCompletionRequestAssistantMessageFunctionCall record {
@@ -3741,7 +3741,7 @@ public type CreateRunRequest record {|
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata?;
@@ -3756,7 +3756,7 @@ public type CreateRunRequest record {|
     @jsondata:Name {value: "truncation_strategy"}
     TruncationObject truncationStrategy?;
     # An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
-    # 
+    #
     # We generally recommend altering this or temperature but not both
     @jsondata:Name {value: "top_p"}
     decimal? topP = 1;
@@ -3787,7 +3787,7 @@ public type InputItemsArray int[];
 # `auto` means the model can pick between generating a message or calling one or more tools.
 # `required` means the model must call one or more tools.
 # Specifying a particular tool via `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
-# 
+#
 # `none` is the default when no tools are present. `auto` is the default if tools are present
 public type ChatCompletionToolChoiceOption ChatCompletionToolChoiceOptionOneOf1|ChatCompletionNamedToolChoice;
 
@@ -3851,7 +3851,7 @@ public type ConnectionConfig record {|
 |};
 
 # The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
-# 
+#
 # See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information
 public type FileSearchRankingOptions record {
     # The score threshold for the file search. All values must be a floating point number between 0 and 1
@@ -4013,7 +4013,7 @@ public type RealtimeSessionCreateResponse record {
     # into your voice", "laugh frequently"). The instructions are not guaranteed 
     # to be followed by the model, but they provide guidance to the model on the 
     # desired behavior.
-    # 
+    #
     # Note that the server sets default instructions which will be used if this 
     # field is not set and are visible in the `session.created` event at the 
     # start of the session
@@ -4067,7 +4067,7 @@ public type ListMessagesQueries record {
 # Set of 16 key-value pairs that can be attached to an object. This can be
 # useful for storing additional information about the object in a structured
 # format, and querying for objects via API or the dashboard. 
-# 
+#
 # Keys are strings with a maximum length of 64 characters. Values are strings
 # with a maximum length of 512 characters
 public type Metadata record {|
@@ -4115,7 +4115,7 @@ public type EvalsevalIdBody record {
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata?;
@@ -4258,66 +4258,66 @@ public type ChatCompletionMessageList record {
 
 public type CreateCompletionRequest record {
     # Modify the likelihood of specified tokens appearing in the completion.
-    # 
+    #
     # Accepts a JSON object that maps tokens (specified by their token ID in the GPT tokenizer) to an associated bias value from -100 to 100. You can use this [tokenizer tool](/tokenizer?view=bpe) to convert text to token IDs. Mathematically, the bias is added to the logits generated by the model prior to sampling. The exact effect will vary per model, but values between -1 and 1 should decrease or increase likelihood of selection; values like -100 or 100 should result in a ban or exclusive selection of the relevant token.
-    # 
+    #
     # As an example, you can pass `{"50256": -100}` to prevent the <|endoftext|> token from being generated
     @jsondata:Name {value: "logit_bias"}
     record {|int...;|}? logitBias?;
     # If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
-    # 
+    #
     # Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend
     int? seed?;
     # The maximum number of [tokens](/tokenizer) that can be generated in the completion.
-    # 
+    #
     # The token count of your prompt plus `max_tokens` cannot exceed the model's context length. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens
     @jsondata:Name {value: "max_tokens"}
     int? maxTokens = 16;
     # Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
-    # 
+    #
     # [See more information about frequency and presence penalties.](/docs/guides/text-generation)
     @jsondata:Name {value: "presence_penalty"}
     decimal? presencePenalty = 0;
     # Echo back the prompt in addition to the completion
     boolean? echo = false;
     # The suffix that comes after a completion of inserted text.
-    # 
+    #
     # This parameter is only supported for `gpt-3.5-turbo-instruct`
     string? suffix?;
     # How many completions to generate for each prompt.
-    # 
+    #
     # **Note:** Because this parameter generates many completions, it can quickly consume your token quota. Use carefully and ensure that you have reasonable settings for `max_tokens` and `stop`
     int? n = 1;
     # Include the log probabilities on the `logprobs` most likely output tokens, as well the chosen tokens. For example, if `logprobs` is 5, the API will return a list of the 5 most likely tokens. The API will always return the `logprob` of the sampled token, so there may be up to `logprobs+1` elements in the response.
-    # 
+    #
     # The maximum value for `logprobs` is 5
     int? logprobs?;
     # An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
-    # 
+    #
     # We generally recommend altering this or `temperature` but not both
     @jsondata:Name {value: "top_p"}
     decimal? topP = 1;
     # Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.
-    # 
+    #
     # [See more information about frequency and presence penalties.](/docs/guides/text-generation)
     @jsondata:Name {value: "frequency_penalty"}
     decimal? frequencyPenalty = 0;
     # Generates `best_of` completions server-side and returns the "best" (the one with the highest log probability per token). Results cannot be streamed.
-    # 
+    #
     # When used with `n`, `best_of` controls the number of candidate completions and `n` specifies how many to return – `best_of` must be greater than `n`.
-    # 
+    #
     # **Note:** Because this parameter generates many completions, it can quickly consume your token quota. Use carefully and ensure that you have reasonable settings for `max_tokens` and `stop`
     @jsondata:Name {value: "best_of"}
     int? bestOf = 1;
     # Not supported with latest reasoning models `o3` and `o4-mini`.
-    # 
+    #
     # Up to 4 sequences where the API will stop generating further tokens. The
     # returned text will not contain the stop sequence
     StopConfiguration? stop?;
     # Whether to stream back partial progress. If set, tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions)
     boolean? 'stream = false;
     # What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
-    # 
+    #
     # We generally recommend altering this or `top_p` but not both
     decimal? temperature = 1;
     # ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models) for descriptions of them
@@ -4325,7 +4325,7 @@ public type CreateCompletionRequest record {
     @jsondata:Name {value: "stream_options"}
     ChatCompletionStreamOptions? streamOptions?;
     # The prompt(s) to generate completions for, encoded as a string, array of strings, array of tokens, or array of token arrays.
-    # 
+    #
     # Note that <|endoftext|> is the document separator that the model sees during training, so if a prompt is not specified the model will generate as if from the beginning of a new document
     string|string[]|int[]|PromptItemsArray[]? prompt = "<|endoftext|>";
     # A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices#end-user-ids)
@@ -4371,14 +4371,14 @@ public type UrlCitationBody record {
 public type PromptItemsArray int[];
 
 # Specifies the latency tier to use for processing the request. This parameter is relevant for customers subscribed to the scale tier service:
-#   - If set to 'auto', and the Project is Scale tier enabled, the system
-#     will utilize scale tier credits until they are exhausted.
-#   - If set to 'auto', and the Project is not Scale tier enabled, the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
-#   - If set to 'default', the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
-#   - If set to 'flex', the request will be processed with the Flex Processing service tier. [Learn more](/docs/guides/flex-processing).
-#   - When not set, the default behavior is 'auto'.
-# 
-#   When this parameter is set, the response body will include the `service_tier` utilized
+# - If set to 'auto', and the Project is Scale tier enabled, the system
+# will utilize scale tier credits until they are exhausted.
+# - If set to 'auto', and the Project is not Scale tier enabled, the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
+# - If set to 'default', the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
+# - If set to 'flex', the request will be processed with the Flex Processing service tier. [Learn more](/docs/guides/flex-processing).
+# - When not set, the default behavior is 'auto'.
+#
+# When this parameter is set, the response body will include the `service_tier` utilized
 public type ServiceTier "auto"|"default"|"flex"?;
 
 public type RunStepDetailsToolCallsObjectToolCalls RunStepDetailsToolCallsCodeObject|RunStepDetailsToolCallsFileSearchObject|RunStepDetailsToolCallsFunctionObject;
@@ -4495,7 +4495,7 @@ public type CreateImageRequest record {
     # This parameter is only supported for `gpt-image-1`. Must be one of 
     # `transparent`, `opaque` or `auto` (default value). When `auto` is used, the 
     # model will automatically determine the best background for the image.
-    # 
+    #
     # If `transparent`, the output format needs to support transparency, so it 
     # should be set to either `png` (default value) or `webp`
     "transparent"|"opaque"|"auto"? background = "auto";
@@ -4512,7 +4512,7 @@ public type CreateImageRequest record {
     # The number of images to generate. Must be between 1 and 10. For `dall-e-3`, only `n=1` is supported
     int? n = 1;
     # The quality of the image that will be generated. 
-    # 
+    #
     # - `auto` (default value) will automatically select the best quality for the given model.
     # - `high`, `medium` and `low` are supported for `gpt-image-1`.
     # - `hd` and `standard` are supported for `dall-e-3`.
@@ -4731,7 +4731,7 @@ public type ListRunStepsQueries record {
     # A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list
     string after?;
     # A list of additional fields to include in the response. Currently the only supported value is `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result content.
-    # 
+    #
     # See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information
     @http:Query {name: "include[]"}
     ("step_details.tool_calls[*].file_search.results[*].content")[] include?;
@@ -4749,7 +4749,7 @@ public type RunObject record {
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata;
@@ -4913,7 +4913,7 @@ public type UsageModerationsQueries record {
 # Specify additional output data to include in the model response. Currently
 # supported values are:
 # - `file_search_call.results`: Include the search results of
-#   the file search tool call.
+# the file search tool call.
 # - `message.input_image.image_url`: Include image urls from the input message.
 # - `computer_call_output.output.image_url`: Include image urls from the computer call output
 public type Includable "file_search_call.results"|"message.input_image.image_url"|"computer_call_output.output.image_url";
@@ -4973,7 +4973,7 @@ public type Certificate record {
     @jsondata:Name {value: "certificate_details"}
     CertificateCertificateDetails certificateDetails;
     # The object type.
-    # 
+    #
     # - If creating, updating, or getting a specific certificate, the object type is `certificate`.
     # - If listing, activating, or deactivating certificates for the organization, the object type is `organization.certificate`.
     # - If listing, activating, or deactivating certificates for a project, the object type is `organization.project.certificate`
@@ -4997,12 +4997,12 @@ public type OpenAIFile record {
     # The intended purpose of the file. Supported values are `assistants`, `assistants_output`, `batch`, `batch_output`, `fine-tune`, `fine-tune-results` and `vision`.
     "assistants"|"assistants_output"|"batch"|"batch_output"|"fine-tune"|"fine-tune-results"|"vision" purpose;
     # Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or `error`.
-    # 
+    #
     # # Deprecated
     @deprecated
     "uploaded"|"processed"|"error" status;
     # Deprecated. For details on why a fine-tuning training file failed validation, see the `error` field on `fine_tuning.job`.
-    # 
+    #
     # # Deprecated
     @deprecated
     string status_details?;
@@ -5109,7 +5109,7 @@ public type StaticChunkingStrategy record {|
     @jsondata:Name {value: "max_chunk_size_tokens"}
     int maxChunkSizeTokens;
     # The number of tokens that overlap between chunks. The default value is `400`.
-    # 
+    #
     # Note that the overlap must not exceed half of `max_chunk_size_tokens`
     @jsondata:Name {value: "chunk_overlap_tokens"}
     int chunkOverlapTokens;
@@ -5141,7 +5141,7 @@ public type AssistantObject record {
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata;
@@ -5154,7 +5154,7 @@ public type AssistantObject record {
     @constraint:Array {maxLength: 128}
     AssistantObjectTools[] tools = [];
     # An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
-    # 
+    #
     # We generally recommend altering this or temperature but not both
     @jsondata:Name {value: "top_p"}
     decimal? topP = 1;
@@ -5184,15 +5184,15 @@ public type EffectiveAt record {
 };
 
 # An object specifying the format that the model must output.
-# 
+#
 # Configuring `{ "type": "json_schema" }` enables Structured Outputs, 
 # which ensures the model will match your supplied JSON schema. Learn more in the 
 # [Structured Outputs guide](/docs/guides/structured-outputs).
-# 
+#
 # The default format is `{ "type": "text" }` with no additional options.
-# 
+#
 # **Not recommended for gpt-4o and newer models:**
-# 
+#
 # Setting to `{ "type": "json_object" }` enables the older JSON mode, which
 # ensures the message the model generates is valid JSON. Using `json_schema`
 # is preferred for models that support it
@@ -5262,7 +5262,7 @@ public type CreateThreadAndRunRequest record {|
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata?;
@@ -5277,7 +5277,7 @@ public type CreateThreadAndRunRequest record {|
     @jsondata:Name {value: "truncation_strategy"}
     TruncationObject truncationStrategy?;
     # An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
-    # 
+    #
     # We generally recommend altering this or temperature but not both
     @jsondata:Name {value: "top_p"}
     decimal? topP = 1;
@@ -5352,7 +5352,7 @@ public type CreateEvalRequest record {
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata?;
@@ -5389,20 +5389,20 @@ public type ChatCompletionRequestMessageContentPartAudioInputAudio record {
 
 public type CreateFineTuningJobRequest record {
     # The ID of an uploaded file that contains training data.
-    # 
+    #
     # See [upload file](/docs/api-reference/files/create) for how to upload a file.
-    # 
+    #
     # Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with the purpose `fine-tune`.
-    # 
+    #
     # The contents of the file should differ depending on if the model uses the [chat](/docs/api-reference/fine-tuning/chat-input), [completions](/docs/api-reference/fine-tuning/completions-input) format, or if the fine-tuning method uses the [preference](/docs/api-reference/fine-tuning/preference-input) format.
-    # 
+    #
     # See the [fine-tuning guide](/docs/guides/fine-tuning) for more details
     @jsondata:Name {value: "training_file"}
     string trainingFile;
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata?;
@@ -5412,14 +5412,14 @@ public type CreateFineTuningJobRequest record {
     # The method used for fine-tuning
     FineTuneMethod method?;
     # The ID of an uploaded file that contains validation data.
-    # 
+    #
     # If you provide this file, the data is used to generate validation
     # metrics periodically during fine-tuning. These metrics can be viewed in
     # the fine-tuning results file.
     # The same data should not be present in both train and validation files.
-    # 
+    #
     # Your dataset must be formatted as a JSONL file. You must upload your file with the purpose `fine-tune`.
-    # 
+    #
     # See the [fine-tuning guide](/docs/guides/fine-tuning) for more details
     @jsondata:Name {value: "validation_file"}
     string? validationFile?;
@@ -5430,7 +5430,7 @@ public type CreateFineTuningJobRequest record {
     # [supported models](/docs/guides/fine-tuning#which-models-can-be-fine-tuned)
     string|"babbage-002"|"davinci-002"|"gpt-3.5-turbo"|"gpt-4o-mini" model;
     # A string of up to 64 characters that will be added to your fine-tuned model name.
-    # 
+    #
     # For example, a `suffix` of "custom-model-name" would produce a model name like `ft:gpt-4o-mini:openai:custom-model-name:7p4lURel`
     string? suffix?;
     # A list of integrations to enable for your fine-tuning job
@@ -5447,7 +5447,7 @@ public type MessageContentImageUrlObjectImageUrl record {
 # Represents the Queries record for the operation: createRun
 public type CreateRunQueries record {
     # A list of additional fields to include in the response. Currently the only supported value is `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result content.
-    # 
+    #
     # See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information
     @http:Query {name: "include[]"}
     ("step_details.tool_calls[*].file_search.results[*].content")[] include?;
@@ -5683,7 +5683,7 @@ public type UpdateVectorStoreRequest record {|
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata?;
@@ -6025,7 +6025,7 @@ public type MessageContentImageUrlObject record {
 public type ToolChoiceTypes record {
     # The type of hosted tool the model should to use. Learn more about
     # [built-in tools](/docs/guides/tools).
-    # 
+    #
     # Allowed values are:
     # - `file_search`
     # - `web_search_preview`
@@ -6132,10 +6132,10 @@ public type ChatCompletionMessageToolCall record {
 
 public type CreateImageEditRequest record {
     # The image(s) to edit. Must be a supported image file or an array of images.
-    # 
+    #
     # For `gpt-image-1`, each image should be a `png`, `webp`, or `jpg` file less 
     # than 25MB. You can provide up to 16 images.
-    # 
+    #
     # For `dall-e-2`, you can only provide one image, and it should be a square 
     # `png` file less than 4MB
     record {byte[] fileContent; string fileName;}|record {byte[] fileContent; string fileName;}[] image;
@@ -6161,7 +6161,7 @@ public type CreateImageEditRequest record {
 # Overrides for the file search tool
 public type AssistantToolsFileSearchFileSearch record {
     # The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
-    # 
+    #
     # Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information
     @jsondata:Name {value: "max_num_results"}
     int maxNumResults?;
@@ -6216,7 +6216,7 @@ public type Model record {
 };
 
 # **o-series models only** 
-# 
+#
 # Constrains effort on reasoning for 
 # [reasoning models](https://platform.openai.com/docs/guides/reasoning).
 # Currently supported values are `low`, `medium`, and `high`. Reducing
@@ -6267,7 +6267,7 @@ public type CreateVectorStoreRequest record {|
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata?;
@@ -6301,7 +6301,7 @@ public type ThreadObject record {
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata;
@@ -6320,7 +6320,7 @@ public type ChatCompletionStreamOptions record {
     # message. The `usage` field on this chunk shows the token usage statistics
     # for the entire request, and the `choices` field will always be an empty
     # array. 
-    # 
+    #
     # All other chunks will also include a `usage` field, but with a null
     # value. **NOTE:** If the stream is interrupted, you may not receive the
     # final usage chunk which contains the total token usage for the request
@@ -6657,7 +6657,7 @@ public type FineTuningJob record {
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata?;
@@ -6846,7 +6846,7 @@ public type FunctionObject record {
     # Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](docs/guides/function-calling)
     boolean? strict = false;
     # The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format. 
-    # 
+    #
     # Omitting `parameters` defines a function with an empty parameter list
     FunctionParameters parameters?;
 };
@@ -6884,7 +6884,7 @@ public type CompletionscompletionIdBody record {
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata;
@@ -6938,7 +6938,7 @@ public type CreateAssistantRequest record {|
     @jsondata:Name {value: "reasoning_effort"}
     ReasoningEffort? reasoningEffort?;
     # An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
-    # 
+    #
     # We generally recommend altering this or temperature but not both
     @jsondata:Name {value: "top_p"}
     decimal? topP = 1;
@@ -6949,7 +6949,7 @@ public type CreateAssistantRequest record {|
     # Set of 16 key-value pairs that can be attached to an object. This can be
     # useful for storing additional information about the object in a structured
     # format, and querying for objects via API or the dashboard. 
-    # 
+    #
     # Keys are strings with a maximum length of 64 characters. Values are strings
     # with a maximum length of 512 characters
     Metadata? metadata?;
@@ -6990,7 +6990,7 @@ public type CreateAssistantRequestToolResourcesCodeInterpreter record {
 public type CreateEvalItem SimpleInputMessage|EvalItem;
 
 # A new Realtime transcription session configuration.
-# 
+#
 # When a session is created on the server via REST API, the session object
 # also contains an ephemeral key. Default TTL for keys is one minute. This 
 # property is not present when a session is updated via the WebSocket API
@@ -7061,7 +7061,7 @@ public type CreateChatCompletionResponse record {
     # A list of chat completion choices. Can be more than one if `n` is greater than 1
     CreateChatCompletionResponseChoices[] choices;
     # This fingerprint represents the backend configuration that the model runs with.
-    # 
+    #
     # Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism
     @jsondata:Name {value: "system_fingerprint"}
     string systemFingerprint?;
@@ -7227,15 +7227,15 @@ public type ListPaginatedFineTuningJobsQueries record {
 # - [Structured Outputs](/docs/guides/structured-outputs)
 public type ResponsePropertiesText record {
     # An object specifying the format that the model must output.
-    # 
+    #
     # Configuring `{ "type": "json_schema" }` enables Structured Outputs, 
     # which ensures the model will match your supplied JSON schema. Learn more in the 
     # [Structured Outputs guide](/docs/guides/structured-outputs).
-    # 
+    #
     # The default format is `{ "type": "text" }` with no additional options.
-    # 
+    #
     # **Not recommended for gpt-4o and newer models:**
-    # 
+    #
     # Setting to `{ "type": "json_object" }` enables the older JSON mode, which
     # ensures the message the model generates is valid JSON. Using `json_schema`
     # is preferred for models that support it
