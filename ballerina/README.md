@@ -7,11 +7,11 @@ The `ballerinax/openai` package offers APIs to easily connect and interact with 
 To use the OpenAI connector, you must have access to the OpenAI API through an OpenAI account and API key.  
 If you do not have an OpenAI account, you can sign up for one [here](https://platform.openai.com/signup).
 
-### Step 1: Create/Open an OpenAI Account
+### Step 1: Create/Open an OpenAI account
 1. Visit the [OpenAI Platform](https://platform.openai.com/).
 2. Sign in with your existing credentials, or create a new OpenAI account if you don’t already have one.
 
-### Step 2: Create a Project
+### Step 2: Create a project
 1. Once logged in, click on your profile icon in the top-right corner.
 2. In the dropdown menu, click **"Your Profile"**. 
 

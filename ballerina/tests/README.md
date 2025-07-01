@@ -36,7 +36,7 @@ Then, run the following command to run the tests:
    ./gradlew clean test
 ```
 
-## Running Tests Against OpenAI Live API
+## Running Tests against OpenAI live API
 
 #### Using a Config.toml File
 
