@@ -34,7 +34,7 @@ http:Service mockService = service object {
 
     # Retrieve a list of assistants
     #
-    # + req - The HTTP request object
+    # + OpenAI\-Beta - The OpenAI-Beta header to check for versioning
     # + return - returns can be any of following types
     # http:Ok (The request has succeeded.)
     # http:BadRequest (The request has invalid or missing OpenAI-Beta header.)
@@ -65,7 +65,7 @@ http:Service mockService = service object {
     # Create a new assistant
     #
     # + requestBody - The payload containing assistant creation details
-    # + req - The HTTP request object
+    # + OpenAI\-Beta - The OpenAI-Beta header to check for versioning
     # + return - returns can be any of following types
     # http:Ok (The request has succeeded.)
     # http:BadRequest (The request has invalid or missing OpenAI-Beta header.)
@@ -107,7 +107,7 @@ http:Service mockService = service object {
     # Retrieve an assistant by ID
     #
     # + assistantId - The ID of the assistant to retrieve
-    # + req - The HTTP request object
+    # + OpenAI\-Beta - The OpenAI-Beta header to check for versioning
     # + return - returns can be any of following types
     # http:Ok (The request has succeeded.)
     # http:BadRequest (The assistant is not found or the OpenAI-Beta header is invalid.)
@@ -135,7 +135,7 @@ http:Service mockService = service object {
     #
     # + assistantId - The ID of the assistant to update
     # + requestBody - The payload containing updated assistant details
-    # + req - The HTTP request object
+    # + OpenAI\-Beta - The OpenAI-Beta header to check for versioning
     # + return - returns can be any of following types
     # http:Ok (The request has succeeded.)
     # http:BadRequest (The assistant is not found or the OpenAI-Beta header is invalid.)
@@ -181,7 +181,7 @@ http:Service mockService = service object {
     # Delete an assistant
     #
     # + assistantId - The ID of the assistant to delete
-    # + req - The HTTP request object
+    # + OpenAI\-Beta - The OpenAI-Beta header to check for versioning
     # + return - returns can be any of following types
     # http:Ok (The request has succeeded.)
     # http:BadRequest (The assistant is not found or the OpenAI-Beta header is invalid.)
@@ -216,7 +216,6 @@ http:Service mockService = service object {
     # Create a new thread
     #
     # + requestBody - The payload containing thread creation details
-    # + req - The HTTP request object
     # + return - returns can be any of following types
     # http:Ok (The request has succeeded.)
     # http:BadRequest (The request is invalid.)
@@ -287,7 +286,6 @@ http:Service mockService = service object {
     # Create a thread and run
     #
     # + requestBody - The payload containing thread and run creation details
-    # + req - The HTTP request object
     # + return - returns can be any of following types
     # http:Ok (The request has succeeded.)
     # http:BadRequest (The request is invalid.)
@@ -355,7 +353,6 @@ http:Service mockService = service object {
     # Generate speech audio
     #
     # + requestBody - The payload containing speech generation details
-    # + req - The HTTP request object
     # + return - returns can be any of following types
     # http:Ok (The request has succeeded.)
     # http:BadRequest (The request is invalid.)
@@ -366,7 +363,6 @@ http:Service mockService = service object {
     # Create a chat completion
     #
     # + requestBody - The payload containing chat completion details
-    # + req - The HTTP request object
     # + return - returns can be any of following types
     # http:Ok (The request has succeeded.)
     # http:BadRequest (The request is invalid.)
@@ -403,7 +399,6 @@ http:Service mockService = service object {
     # Create a text completion
     #
     # + requestBody - The payload containing text completion details
-    # + req - The HTTP request object
     # + return - returns can be any of following types
     # http:Ok (The request has succeeded.)
     # http:BadRequest (The request is invalid.)
@@ -450,7 +445,6 @@ http:Service mockService = service object {
     # Create embeddings
     #
     # + requestBody - The payload containing embedding creation details
-    # + req - The HTTP request object
     # + return - returns can be any of following types
     # http:Ok (The request has succeeded.)
     # http:BadRequest (The request is invalid.)

@@ -15,8 +15,8 @@
 // under the License.
 
 import ballerina/io;
-import ballerinax/openai;
 import ballerina/lang.runtime;
+import ballerinax/openai;
 
 configurable string token = ?;
 configurable map<string> headers = {
@@ -45,7 +45,7 @@ public function main() returns error? {
         responseFormat: {"type": "text"}
     };
 
-    openai:AssistantObject assistantResponse = check openaiClient->/assistants.post(assistantRequest, headers=headers);
+    openai:AssistantObject assistantResponse = check openaiClient->/assistants.post(assistantRequest, headers = headers);
     io:println("Marketing Content Assistant Created -> ID: ", assistantResponse.id, "\n");
 
     // Get user input for marketing visual description
@@ -61,24 +61,24 @@ public function main() returns error? {
             }
         ]
     };
-    openai:ThreadObject thread = check openaiClient->/threads.post(threadRequest, headers=headers);
+    openai:ThreadObject thread = check openaiClient->/threads.post(threadRequest, headers = headers);
 
     // Run the assistant on the thread
     openai:CreateRunRequest runRequest = {
         assistantId: assistantResponse.id,
         instructions: "Generate a detailed prompt for a marketing visual suitable for DALL·E."
     };
-    openai:RunObject run = check openaiClient->/threads/[thread.id]/runs.post(runRequest, headers=headers);
+    openai:RunObject run = check openaiClient->/threads/[thread.id]/runs.post(runRequest, headers = headers);
 
     // Poll for run completion
-    openai:RunObject runStatus = check openaiClient->/threads/[thread.id]/runs/[run.id](headers=headers);
+    openai:RunObject runStatus = check openaiClient->/threads/[thread.id]/runs/[run.id](headers = headers);
     while runStatus.status != "completed" {
         runtime:sleep(1);
-        runStatus = check openaiClient->/threads/[thread.id]/runs/[run.id](headers=headers);
+        runStatus = check openaiClient->/threads/[thread.id]/runs/[run.id](headers = headers);
     }
 
     // Retrieve the generated prompt
-    openai:ListMessagesResponse messages = check openaiClient->/threads/[thread.id]/messages(headers=headers);
+    openai:ListMessagesResponse messages = check openaiClient->/threads/[thread.id]/messages(headers = headers);
     openai:MessageObjectContent? artPromptContent = messages.data[0].content[0];
     string? artPrompt = artPromptContent?.text?.value;
     io:println("Generated Marketing Visual Prompt:\n", artPrompt ?: "No prompt received.", "\n");
@@ -91,10 +91,10 @@ public function main() returns error? {
         size: "1024x1024",
         responseFormat: "url"
     };
-    openai:ImagesResponse imageResponse = check openaiClient->/images/generations.post(imageRequest, headers=headers);
+    openai:ImagesResponse imageResponse = check openaiClient->/images/generations.post(imageRequest, headers = headers);
     io:println("Generated Image URL: ", imageResponse.data, "\n");
 
     // List all assistants
-    openai:ListAssistantsResponse listResponse = check openaiClient->/assistants(headers=headers);
+    openai:ListAssistantsResponse listResponse = check openaiClient->/assistants(headers = headers);
     io:println("Available Assistants -> ", listResponse.data.map(a => a.name).toString(), "\n");
 }

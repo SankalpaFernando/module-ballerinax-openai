@@ -1,11 +1,9 @@
 ## Overview
-
 [OpenAI](https://openai.com/) provides a suite of powerful AI models and services for natural language processing, code generation, image understanding, and more.
 
 The `ballerinax/openai` package offers APIs to easily connect and interact with [OpenAI's RESTful API](https://openai.com/api/) endpoints, enabling seamless integration with models such as GPT, Whisper, and DALL·E.
 
 ## Setup guide
-
 To use the OpenAI connector, you must have access to the OpenAI API through an OpenAI account and API key.  
 If you do not have an OpenAI account, you can sign up for one [here](https://platform.openai.com/signup).
 
@@ -43,7 +41,6 @@ If you do not have an OpenAI account, you can sign up for one [here](https://pla
 To use the `OpenAI` connector in your Ballerina application, update the `.bal` file as follows:
 
 ### Step 1: Import the module
-
 Import the `openai` module.
 
 ```ballerina
@@ -51,10 +48,9 @@ import ballerinax/openai;
 ```
 
 ### Step 2: Instantiate a new connector
-
 1. Create a `Config.toml` file and, configure the obtained credentials in the above steps as follows:
 
-   ```bash
+   ```toml
    token = "<Access Token>"
    ```
 
@@ -71,11 +67,8 @@ import ballerinax/openai;
    ```
 
 ### Step 3: Invoke the connector operation
-
 Now, utilize the available connector operations.
-
 #### Create an Assistant
-
 ```ballerina
 public function main() returns error? {
    openai:CreateAssistantRequest request = {
@@ -99,13 +92,9 @@ public function main() returns error? {
    openai:AssistantObject response = check openai->/assistants.post(request, headers = headers);
 }
 ```
-
 ### Step 4: Run the Ballerina application
-
 ```bash
 bal run
 ```
-
 ## Examples
-
 The `Ballerina OpenAI Connector` connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/module-ballerinax-openai/tree/main/examples/), covering the following use cases:

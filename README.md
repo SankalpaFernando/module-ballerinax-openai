@@ -5,17 +5,15 @@
 [![GitHub Issues](https://img.shields.io/github/issues/ballerina-platform/ballerina-library/module/openai.svg?label=Open%20Issues)](https://github.com/ballerina-platform/ballerina-library/labels/module%openai)
 
 ## Overview
-
 [OpenAI](https://openai.com/) provides a suite of powerful AI models and services for natural language processing, code generation, image understanding, and more.
 
-The `ballerinax/openai` package offers APIs to easily connect and interact with [OpenAI's RESTful API](https://openai.com/api/) endpoints, enabling seamless integration with models such as GPT, Whisper, and DALL·E.
+The `ballerinax/openai` package offers APIs to easily connect and interact with [OpenAI API v2.3.0](https://openai.com/api/) endpoints, enabling seamless integration with models such as GPT, Whisper, and DALL·E.
 
 ## Setup guide
-
 To use the OpenAI connector, you must have access to the OpenAI API through an OpenAI account and API key.  
 If you do not have an OpenAI account, you can sign up for one [here](https://platform.openai.com/signup).
 
-### Step 1: Create/Open an OpenAI Account
+### Step 1: Create an OpenAI Account
 1. Visit the [OpenAI Platform](https://platform.openai.com/).
 2. Sign in with your existing credentials, or create a new OpenAI account if you don’t already have one.
 
@@ -47,11 +45,8 @@ If you do not have an OpenAI account, you can sign up for one [here](https://pla
 
 ## Quickstart
 To use the `OpenAI` connector in your Ballerina application, update the `.bal` file as follows:
-
 ### Step 1: Import the module
-
 Import the `openai` module.
-
 ```ballerina
 import ballerinax/openai;
 ```
@@ -60,7 +55,7 @@ import ballerinax/openai;
 
 1. Create a `Config.toml` file and, configure the obtained credentials in the above steps as follows:
 
-   ```bash
+   ```toml
    token = "<Access Token>"
    ```
 

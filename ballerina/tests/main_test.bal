@@ -37,7 +37,7 @@ string threadId = "thread_abc123";
 @test:Config {
     groups: ["live_tests", "mock_tests", "assistants"]
 }
-function testpostAssistant() returns error? {
+function testPostAssistant() returns error? {
     CreateAssistantRequest request = {
         model: "gpt-4o",
         name: "Math Tutor",
@@ -71,10 +71,10 @@ function testpostAssistant() returns error? {
 }
 
 @test:Config {
-    dependsOn: [testpostAssistant],
+    dependsOn: [testPostAssistant],
     groups: ["live_tests", "mock_tests", "assistants"]
 }
-isolated function testgetAssistants() returns error? {
+isolated function testGetAssistants() returns error? {
     ListAssistantsResponse response = check openai->/assistants.get(headers = headers);
 
     test:assertEquals(response.data.length(), 1, "Expected at least one assistant to be present");
@@ -82,10 +82,10 @@ isolated function testgetAssistants() returns error? {
 }
 
 @test:Config {
-    dependsOn: [testpostAssistant],
+    dependsOn: [testPostAssistant],
     groups: ["live_tests", "mock_tests", "assistants"]
 }
-function testgetAssistantById() returns error? {
+function testGetAssistantById() returns error? {
     AssistantObject response = check openai->/assistants/[assistantId].get(headers = headers);
 
     test:assertEquals(response.id, assistantId, "Expected assistant ID to match");
@@ -98,10 +98,10 @@ function testgetAssistantById() returns error? {
 }
 
 @test:Config {
-    dependsOn: [testpostAssistant],
+    dependsOn: [testPostAssistant],
     groups: ["live_tests", "mock_tests", "assistants"]
 }
-function testpostAssistantById() returns error? {
+function testPostAssistantById() returns error? {
     ModifyAssistantRequest request = {
         name: "Updated Math Tutor",
         description: "Updated description",
@@ -129,7 +129,7 @@ function testpostAssistantById() returns error? {
 @test:Config {
     groups: ["live_tests", "mock_tests", "assistants"]
 }
-function testpostThread() returns error? {
+function testPostThread() returns error? {
     CreateThreadRequest request = {
         messages: [
             {
@@ -151,7 +151,7 @@ function testpostThread() returns error? {
 };
 
 @test:Config {
-    dependsOn: [testpostThread],
+    dependsOn: [testPostThread],
     groups: ["live_tests", "mock_tests", "assistants"]
 }
 function testpostThreadAndRun() returns error? {
@@ -199,10 +199,10 @@ function testpostThreadAndRun() returns error? {
 }
 
 @test:Config {
-    dependsOn: [testpostThread],
+    dependsOn: [testPostThread],
     groups: ["live_tests", "mock_tests", "assistants"]
 }
-function testgetThreadById() returns error? {
+function testGetThreadById() returns error? {
     ThreadObject response = check openai->/threads/[threadId].get(headers = headers);
     test:assertEquals(response.id, threadId, "Expected thread ID to match");
     test:assertNotEquals(response.createdAt, 0, "Expected thread creation timestamp to be set");
@@ -211,7 +211,7 @@ function testgetThreadById() returns error? {
 @test:Config {
     groups: ["live_tests", "mock_tests", "audio"]
 }
-function testpostAudioSpeech() returns error? {
+function testPostAudioSpeech() returns error? {
     CreateSpeechRequest request = {
         input: "Hello, how are you?",
         instructions: "You're a good assistant",
@@ -230,7 +230,7 @@ function testpostAudioSpeech() returns error? {
 @test:Config {
     groups: ["live_tests", "mock_tests", "chat"]
 }
-function testpostCompletions() returns error? {
+function testPostCompletions() returns error? {
     string model = "davinci";
     CreateCompletionRequest request = {
         model,
@@ -253,7 +253,7 @@ function testpostCompletions() returns error? {
 @test:Config {
     groups: ["live_tests", "mock_tests", "embeddings"]
 }
-function testpostembeddings() returns error? {
+function testPostEmbeddings() returns error? {
     string model = "text-embedding-3-small";
     CreateEmbeddingRequest request = {
         input: "The quick brown fox jumped over the lazy dog",
@@ -270,14 +270,14 @@ function testpostembeddings() returns error? {
     test:assertNotEquals(response.data.length(), 0, "Expected data to be set");
 }
 
-function testdeleteAssistant() returns error? {
+function testDeleteAssistant() returns error? {
     DeleteAssistantResponse response = check openai->/assistants/[assistantId].delete(headers = headers);
 
     test:assertEquals(response.deleted, true, "Expected assistant to be deleted successfully");
     test:assertEquals(response.id, assistantId, "Expected deleted assistant ID to match");
 }
 
-function testdeleteThread() returns error? {
+function testDeleteThread() returns error? {
     DeleteThreadResponse response = check openai->/threads/[threadId].delete(headers = headers);
 
     test:assertEquals(response.deleted, true, "Expected thread to be deleted successfully");
@@ -286,6 +286,6 @@ function testdeleteThread() returns error? {
 
 @test:AfterSuite {}
 function deleteResources() returns error? {
-    check testdeleteAssistant();
-    check testdeleteThread();
+    check testDeleteAssistant();
+    check testDeleteThread();
 }
