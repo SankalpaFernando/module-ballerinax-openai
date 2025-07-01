@@ -11,8 +11,8 @@ These changes are done in order to improve the overall usability, and as workaro
 
 [//]: # (TODO: Add sanitation details)
 1. **Path Parameter Consistency**
-    - **Issue** <br>
-        `paths./organization/certificates/{certificate_id}`<br>
+    - **Issue**
+        `paths./organization/certificates/{certificate_id}`
         Path parameter `certificate_id` is declared in the path but missing from operations `POST` and `DELETE`.
 
     - **Fix**
@@ -39,7 +39,6 @@ Add the following to each of the affected operations (`post`, `delete`):
 
         - **Fix**
             Remove the line containing `$recursiveAnchor`.
-            <br>
         - **Issue 2**
            ```yaml
             oneOf:
@@ -53,7 +52,7 @@ Add the following to each of the affected operations (`post`, `delete`):
             OpenAPI 3.0 does not support JSON Schema Draft 2019 keywords like `$recursiveAnchor` and `$recursiveRef`.
 3. **Duplicate Items in required Arrays**
     - **Schema**: ContainerResource
-    - **Issue**<br>
+    - **Issue**
         `required` array has duplicate values: item at index 4 is repeated at index 8.
         ```yaml
         required:
@@ -76,7 +75,7 @@ Remove the duplicate item from the array.
         - `MCPTool.properties.allowed_tools.oneOf.1.required`
 
         - `RankingOptions.required`
-    - **Issue**<br>
+    - **Issue**
         `required` array has fewer than 1 item (empty).
         ```yaml
         required:
@@ -107,7 +106,7 @@ Empty `required` arrays are invalid in OpenAPI 3.0. At least one property must b
     - **Reason**
 These keywords are not supported in OpenAPI 3.0. Their presence leads to schema validation failures.
 6. **Invalid Keywords Inside `items` Schema**
-    - **Issue** <br>
+    - **Issue**
     Contains `min_items`, `max_items` within `items`, which is not allowed.
     - **Fix**
 Move these constraints (minItems, maxItems) to the parent array definition
