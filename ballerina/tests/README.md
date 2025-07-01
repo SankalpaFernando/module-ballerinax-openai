@@ -5,7 +5,7 @@ You need an Access token from OpenAI developer account.
 
 To do this, refer to [OpenAI API Documentation](https://platform.openai.com/docs/api-reference/introduction).
 
-# Running Tests
+## Test environments
 
 There are two test environments for running the OpenAI connector tests. The default test environment is the mock server for OpenAI API. The other test environment is the actual OpenAI API. 
 
@@ -16,13 +16,13 @@ You can run the tests in either of these environments and each has its own compa
  mock_tests  | Mock server for OpenAI API (Defualt Environment) 
  live_tests  | OpenAI API                                       
 
-## Running Tests in the Mock Server
+## Running tests in the mock server
 
 To execute the tests on the mock server, ensure that the `islive` environment variable is either set to `false` or unset before initiating the tests. 
 
 This environment variable can be configured within the `Config.toml` file located in the tests directory.
 
-#### Using a Config.toml File
+#### Using a Config.toml file
 
 Create a `Config.toml` file in the tests directory and the following content:
 
@@ -36,9 +36,9 @@ Then, run the following command to run the tests:
    ./gradlew clean test
 ```
 
-## Running Tests against OpenAI live API
+## Running tests against OpenAI live API
 
-#### Using a Config.toml File
+#### Using a Config.toml file
 
 Create a `Config.toml` file in the tests directory and add your authentication credentials a
 

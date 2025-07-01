@@ -16,7 +16,7 @@
 
 import ballerina/test;
 
-configurable string token = "default-token";
+configurable string token = "mock_token";
 configurable boolean islive = false;
 
 ConnectionConfig config = {
