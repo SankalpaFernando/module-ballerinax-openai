@@ -106,8 +106,6 @@ public function main() returns error? {
 bal run
 ```
 
-
 ## Examples
 
 The `Ballerina OpenAI Connector` connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/module-ballerinax-openai/tree/main/examples/), covering the following use cases:
-
