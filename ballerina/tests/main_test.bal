@@ -17,13 +17,13 @@
 import ballerina/test;
 
 configurable string token = "mock_token";
-configurable boolean islive = false;
+configurable boolean isLiveServer = false;
 
 ConnectionConfig config = {
     auth: {token}
 };
 
-configurable string serviceURL = islive ? "https://api.openai.com/v1" : "http://localhost:9090";
+configurable string serviceURL = isLiveServer ? "https://api.openai.com/v1" : "http://localhost:9090";
 
 final Client openai = check new Client(config, serviceURL);
 

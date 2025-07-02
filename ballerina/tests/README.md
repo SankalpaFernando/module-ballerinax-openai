@@ -18,7 +18,7 @@ You can run the tests in either of these environments and each has its own compa
 
 ## Running tests in the mock server
 
-To execute the tests on the mock server, ensure that the `islive` environment variable is either set to `false` or unset before initiating the tests. 
+To execute the tests on the mock server, ensure that the `isLiveServer` environment variable is either set to `false` or unset before initiating the tests. 
 
 This environment variable can be configured within the `Config.toml` file located in the tests directory.
 
@@ -27,13 +27,13 @@ This environment variable can be configured within the `Config.toml` file locate
 Create a `Config.toml` file in the tests directory and the following content:
 
 ```toml
-islive = false
+isLiveServer = false
 ```
 
 Then, run the following command to run the tests:
 
 ```bash
-   ./gradlew clean test
+./gradlew clean test
 ```
 
 ## Running tests against OpenAI live API
@@ -43,11 +43,11 @@ Then, run the following command to run the tests:
 Create a `Config.toml` file in the tests directory and add your authentication credentials a
 
 ```toml
-   islive = true
-   token = "<your-openai-access-token>"
+isLiveServer = true
+token = "<your-openai-access-token>"
 ```
 Then, run the following command to run the tests:
 
 ```bash
-   ./gradlew clean test 
+./gradlew clean test 
 ```
