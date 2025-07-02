@@ -110,9 +110,10 @@ bal run
 
 ## Examples
 
-The `Ballerina OpenAI Connector` connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/module-ballerinax-openai/tree/main/examples/), covering the following use cases:
+The `ballerinax/openai` connector provides practical examples illustrating usage in various scenarios. Explore these examples, covering use cases like Assistant Creation and Embedding Generation.
 
-[//]: # (TODO: Add examples)
+1. [**Financial Assistant**](https://github.com/ballerina-platform/module-ballerinax-openai/tree/main/examples/financial-assistant) - Build a Personal Finance Assistant that helps users manage their budget, track expenses, and get financial advice.
+2. [**Marketing Image Generator**](https://github.com/ballerina-platform/module-ballerinax-openai/tree/main/examples/marketing-image-generator) - Creates an assistant that takes a user’s description from the console, makes a DALL·E image with it.
 
 ## Build from the source
 
