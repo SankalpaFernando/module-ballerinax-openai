@@ -106,8 +106,6 @@ public function main() returns error? {
 ```bash
 bal run
 ```
-
-
 ## Examples
 
 The `ballerinax/openai` connector provides practical examples illustrating usage in various scenarios. Explore these examples, covering use cases like Assistant Creation and Embedding Generation.
