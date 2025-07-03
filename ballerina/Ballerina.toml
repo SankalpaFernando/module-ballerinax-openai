@@ -5,8 +5,8 @@ name = "openai"
 version = "1.0.0"
 license = ["Apache-2.0"]
 authors = ["Ballerina"]
-keywords = []
-# icon = "icon.png" # TODO: update icon.png
+keywords = ["openai", "ai", "ChatGPT"]
+icon = "icon.png"
 repository = "https://github.com/ballerina-platform/module-ballerinax-openai"
 
 [build-options]

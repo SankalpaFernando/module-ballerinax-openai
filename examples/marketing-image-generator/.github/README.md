@@ -1,0 +1,1 @@
+../marketing-image-generator.md

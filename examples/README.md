@@ -1,14 +1,19 @@
 # Examples
 
-The `ballerinax/openai` connector provides practical examples illustrating usage in various scenarios.
+The `ballerinax/openai` connector provides practical examples illustrating usage in various scenarios. Explore these examples, covering use cases like Assistant Creation and Embedding Generation.
 
-[//]: # (TODO: Add examples)
-1. 
-2. 
+1. [**Financial Assistant**](https://github.com/ballerina-platform/module-ballerinax-openai/tree/main/examples/financial-assistant) - Build a Personal Finance Assistant that helps users manage their budget, track expenses, and get financial advice.
+2. [**Marketing Image Generator**](https://github.com/ballerina-platform/module-ballerinax-openai/tree/main/examples/marketing-image-generator) - Creates an assistant that takes a user’s description from the console, makes a DALL·E image with it.
 
 ## Prerequisites
 
-[//]: # (TODO: Add prerequisites)
+1. Generate OpenAI credentials to authenticate the connector as described in the [Setup guide](https://central.ballerina.io/ballerinax/openai/latest#setup-guide).
+
+2. For each example, create a `Config.toml` file the related configuration. Here's an example of how your `Config.toml` file should look:
+
+    ```toml
+    token = "<Access Token>"
+    ```
 
 ## Running an example
 
